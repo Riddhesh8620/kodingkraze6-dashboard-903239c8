@@ -6,7 +6,7 @@ const WelcomeHero = () => {
     <section className="relative overflow-hidden rounded-3xl bg-secondary/30 p-8 md:p-16 pattern-dots">
       {/* Gradient orbs */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 opacity-30 gradient-accent" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full blur-3xl translate-y-1/2 -translate-x-1/4 opacity-20" style={{ background: 'hsl(200 100% 50%)' }} />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full blur-3xl translate-y-1/2 -translate-x-1/4 opacity-20" style={{ background: 'hsla(200, 78%, 66%, 1.00)' }} />
       
       {/* Geometric shapes */}
       <div className="absolute top-20 right-20 w-20 h-20 border-2 border-foreground/10 rounded-full animate-pulse hidden lg:block" />
@@ -17,7 +17,7 @@ const WelcomeHero = () => {
         {/* Badge */}
         <div className="inline-flex items-center gap-2 rounded-full border border-foreground/10 bg-background/80 backdrop-blur-sm px-4 py-2 text-sm font-medium mb-8 animate-fade-up">
           <Sparkles className="h-4 w-4 text-accent" />
-          <span>No subscriptions. Pay per course.</span>
+          <span>No subscriptions.Pay as you Learn .</span>
           <ArrowRight className="h-3 w-3 text-muted-foreground" />
         </div>
         
@@ -30,7 +30,7 @@ const WelcomeHero = () => {
         
         {/* Subheadline */}
         <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-xl leading-relaxed animate-fade-up" style={{ animationDelay: "0.2s" }}>
-          Premium courses from industry experts. Real-world projects. 
+          Premium courses from experts. Real-world projects. 
           Your pace, your path. Start learning today.
         </p>
         

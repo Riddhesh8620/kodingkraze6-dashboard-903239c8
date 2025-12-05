@@ -14,10 +14,10 @@ const Header = () => {
           </div>
           <div className="flex flex-col">
             <span className="text-xl font-bold tracking-tight font-display">
-              KodingKRaze6
+              KodingKraze6
             </span>
             <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-              Learn • Build • Ship
+              Learn • Build • Grow
             </span>
           </div>
         </div>
