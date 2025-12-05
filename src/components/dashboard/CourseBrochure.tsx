@@ -1,5 +1,3 @@
-import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import CourseCard from "./CourseCard";
 import { useCourses } from "@/hooks/use-courses";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -136,19 +134,7 @@ const CourseBrochure = () => {
   }));
 
   return (
-    <section>
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h2 className="text-2xl font-bold">Course Brochure</h2>
-          <p className="text-muted-foreground">Top-rated courses from expert instructors</p>
-        </div>
-        <Button variant="ghost" className="group text-primary hover:text-primary">
-          View All
-          <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-        </Button>
-      </div>
-      
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {isLoading ? (
           Array.from({ length: 6 }).map((_, index) => (
             <CourseSkeleton key={index} />
@@ -172,8 +158,7 @@ const CourseBrochure = () => {
             />
           ))
         )}
-      </div>
-    </section>
+    </div>
   );
 };
 

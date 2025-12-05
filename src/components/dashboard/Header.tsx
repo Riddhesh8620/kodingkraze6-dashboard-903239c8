@@ -1,48 +1,67 @@
-import { Search, Bell, User, Menu } from "lucide-react";
+import { Search, Bell, User, Menu, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 const Header = () => {
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between gap-4">
+    <header className="sticky top-0 z-50 w-full border-b border-border glass">
+      <div className="container flex h-20 items-center justify-between gap-4">
         {/* Logo */}
-        <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg gradient-primary">
-            <span className="text-lg font-bold text-primary-foreground">K</span>
+        <div className="flex items-center gap-3">
+          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-foreground">
+            <Zap className="h-5 w-5 text-background" fill="currentColor" />
+            <div className="absolute -inset-1 rounded-xl bg-foreground/20 blur-lg -z-10" />
           </div>
-          <span className="text-xl font-bold tracking-tight">
-            Koding<span className="text-gradient">KRaze6</span>
-          </span>
+          <div className="flex flex-col">
+            <span className="text-xl font-bold tracking-tight font-display">
+              KodingKRaze6
+            </span>
+            <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+              Learn • Build • Ship
+            </span>
+          </div>
         </div>
 
+        {/* Navigation */}
+        <nav className="hidden lg:flex items-center gap-8">
+          {["Courses", "Categories", "Pricing", "Community"].map((item) => (
+            <a
+              key={item}
+              href="#"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors link-underline"
+            >
+              {item}
+            </a>
+          ))}
+        </nav>
+
         {/* Search Bar */}
-        <div className="hidden flex-1 max-w-md md:flex">
-          <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <div className="hidden md:flex flex-1 max-w-sm">
+          <div className="relative w-full group">
+            <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground group-focus-within:text-foreground transition-colors" />
             <Input
-              placeholder="Search courses, topics..."
-              className="w-full pl-10 bg-secondary border-0 focus-visible:ring-1 focus-visible:ring-primary"
+              placeholder="Search anything..."
+              className="w-full pl-11 pr-4 h-11 bg-secondary/50 border-0 rounded-full focus-visible:ring-2 focus-visible:ring-foreground/10 focus-visible:bg-secondary transition-all"
             />
           </div>
         </div>
 
         {/* Right Actions */}
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="md:hidden">
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" size="icon" className="md:hidden rounded-full">
             <Search className="h-5 w-5" />
           </Button>
-          <Button variant="ghost" size="icon" className="relative">
+          <Button variant="ghost" size="icon" className="relative rounded-full">
             <Bell className="h-5 w-5" />
-            <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-primary" />
+            <span className="absolute top-2 right-2 h-2 w-2 rounded-full gradient-accent" />
           </Button>
-          <Button variant="ghost" size="icon" className="hidden md:flex">
+          <Button variant="ghost" size="icon" className="hidden md:flex rounded-full">
             <User className="h-5 w-5" />
           </Button>
-          <Button className="hidden md:flex gradient-primary border-0 shadow-soft hover:shadow-glow transition-shadow">
-            Browse Courses
+          <Button className="hidden sm:flex btn-primary rounded-full px-6 h-11">
+            Get Started
           </Button>
-          <Button variant="ghost" size="icon" className="md:hidden">
+          <Button variant="ghost" size="icon" className="md:hidden rounded-full">
             <Menu className="h-5 w-5" />
           </Button>
         </div>
