@@ -1,10 +1,30 @@
-import { BookOpen, Users, Award, TrendingUp } from "lucide-react";
+import { TrendingUp, Users, BookOpen, Award } from "lucide-react";
 
 const stats = [
-  { icon: BookOpen, label: "Total Courses", value: "150+", color: "hsl(217, 91%, 60%)" },
-  { icon: Users, label: "Active Learners", value: "45K+", color: "hsl(262, 83%, 58%)" },
-  { icon: Award, label: "Certificates Issued", value: "12K+", color: "hsl(142, 71%, 45%)" },
-  { icon: TrendingUp, label: "Completion Rate", value: "94%", color: "hsl(340, 82%, 52%)" },
+  { 
+    icon: Users, 
+    value: "50,000+", 
+    label: "Active Learners",
+    trend: "+12% this month"
+  },
+  { 
+    icon: BookOpen, 
+    value: "200+", 
+    label: "Premium Courses",
+    trend: "New courses weekly"
+  },
+  { 
+    icon: Award, 
+    value: "95%", 
+    label: "Success Rate",
+    trend: "Industry leading"
+  },
+  { 
+    icon: TrendingUp, 
+    value: "4.9/5", 
+    label: "Average Rating",
+    trend: "From 10K+ reviews"
+  },
 ];
 
 const StatsBar = () => {
@@ -13,23 +33,26 @@ const StatsBar = () => {
       {stats.map((stat, index) => (
         <div 
           key={stat.label}
-          className="relative overflow-hidden rounded-xl border border-border bg-card p-6 animate-fade-up"
+          className="relative overflow-hidden rounded-2xl border border-border bg-background p-6 animate-fade-up group hover:border-foreground/20 transition-colors"
           style={{ animationDelay: `${index * 0.1}s` }}
         >
-          <div 
-            className="absolute top-0 right-0 w-24 h-24 rounded-full blur-2xl opacity-10"
-            style={{ backgroundColor: stat.color }}
-          />
+          {/* Icon */}
+          <stat.icon className="h-5 w-5 text-muted-foreground mb-4 group-hover:text-foreground transition-colors" strokeWidth={1.5} />
           
-          <div 
-            className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg"
-            style={{ backgroundColor: `${stat.color}15`, color: stat.color }}
-          >
-            <stat.icon className="h-5 w-5" />
+          {/* Value */}
+          <div className="text-2xl md:text-3xl font-bold font-display mb-1">
+            {stat.value}
           </div>
           
-          <p className="text-2xl font-bold">{stat.value}</p>
-          <p className="text-sm text-muted-foreground">{stat.label}</p>
+          {/* Label */}
+          <div className="text-sm text-muted-foreground mb-2">
+            {stat.label}
+          </div>
+          
+          {/* Trend */}
+          <div className="text-xs text-muted-foreground/70">
+            {stat.trend}
+          </div>
         </div>
       ))}
     </section>

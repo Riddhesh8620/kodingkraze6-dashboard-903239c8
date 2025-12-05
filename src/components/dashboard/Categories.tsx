@@ -38,15 +38,7 @@ const Categories = () => {
   const displayCategories = categories || fallbackCategories;
 
   return (
-    <section>
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h2 className="text-2xl font-bold">Browse by Category</h2>
-          <p className="text-muted-foreground">Find the perfect course for your goals</p>
-        </div>
-      </div>
-      
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {isLoading ? (
           Array.from({ length: 6 }).map((_, index) => (
             <CategorySkeleton key={index} />
@@ -63,8 +55,7 @@ const Categories = () => {
             />
           ))
         )}
-      </div>
-    </section>
+    </div>
   );
 };
 
