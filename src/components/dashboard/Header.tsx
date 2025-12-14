@@ -1,8 +1,18 @@
-import { Search, Bell, User, Menu, Zap } from "lucide-react";
+import { Search, Bell, User, Menu, Zap, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/hooks/use-auth";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Header = () => {
+  const { user, signOut } = useAuth();
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border glass">
       <div className="container flex h-20 items-center justify-between gap-4">
@@ -55,12 +65,27 @@ const Header = () => {
             <Bell className="h-5 w-5" />
             <span className="absolute top-2 right-2 h-2 w-2 rounded-full gradient-accent" />
           </Button>
-          <Button variant="ghost" size="icon" className="hidden md:flex rounded-full">
-            <User className="h-5 w-5" />
-          </Button>
-          <Button className="hidden sm:flex btn-primary rounded-full px-6 h-11">
-            Get Started
-          </Button>
+          
+          {/* User Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="rounded-full">
+                <User className="h-5 w-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <div className="px-3 py-2">
+                <p className="text-sm font-medium truncate">{user?.email}</p>
+                <p className="text-xs text-muted-foreground">Learner</p>
+              </div>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={signOut} className="text-destructive focus:text-destructive cursor-pointer">
+                <LogOut className="mr-2 h-4 w-4" />
+                Sign out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           <Button variant="ghost" size="icon" className="md:hidden rounded-full">
             <Menu className="h-5 w-5" />
           </Button>
