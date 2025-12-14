@@ -96,6 +96,16 @@ export default {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0.5" },
         },
+        rollInside: {
+          '0%': { transform: 'rotate(0deg) translateX(40px) rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg) translateX(40px) rotate(-360deg)' }
+        },
+        bounceInside: {
+          '0%, 100%': { transform: 'translate(0, 0)' },
+          '25%': { transform: 'translate(60px, 0)' },         // right edge
+          '50%': { transform: 'translate(5px, 60px)' },      // bottom right
+          '75%': { transform: 'translate(0, 60px)' },         // bottom left
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -104,6 +114,8 @@ export default {
         "fade-in": "fade-in 0.4s ease-out forwards",
         "scale-in": "scale-in 0.3s ease-out forwards",
         "slide-in-right": "slide-in-right 0.4s ease-out forwards",
+        bounceInside: 'bounceInside 3s ease-in-out infinite',
+        rollInside: 'rollInside 4s linear infinite'
       },
     },
   },
