@@ -61,8 +61,8 @@ export default function Auth() {
       toast({
         variant: "destructive",
         title: "Login failed",
-        description: error.message === "Invalid login credentials" 
-          ? "Incorrect email or password. Please try again." 
+        description: error.message === "Invalid login credentials"
+          ? "Incorrect email or password. Please try again."
           : error.message,
       });
     }
@@ -77,7 +77,7 @@ export default function Auth() {
       const errorMessage = error.message.includes("already registered")
         ? "This email is already registered. Try logging in instead."
         : error.message;
-      
+
       toast({
         variant: "destructive",
         title: "Signup failed",
@@ -102,11 +102,11 @@ export default function Auth() {
       {/* Background decorations */}
       <div className="absolute top-0 right-0 w-[800px] h-[800px] rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 opacity-20 gradient-accent" />
       <div className="absolute bottom-0 left-0 w-[600px] h-[600px] rounded-full blur-3xl translate-y-1/2 -translate-x-1/3 opacity-15" style={{ background: 'hsla(200, 78%, 66%, 1)' }} />
-      
+
       {/* Geometric shapes */}
       <div className="absolute top-1/4 left-1/4 w-32 h-32 border-2 border-foreground/5 rounded-full animate-pulse hidden lg:block" />
       <div className="absolute bottom-1/4 right-1/4 w-24 h-24 border-2 border-foreground/5 rotate-45 hidden lg:block" />
-      
+
       <div className="w-full max-w-md relative z-10">
         {/* Logo */}
         <div className="text-center mb-8 animate-fade-up">
@@ -125,21 +125,19 @@ export default function Auth() {
           <div className="flex bg-secondary rounded-xl p-1 mb-8">
             <button
               onClick={() => setIsLogin(true)}
-              className={`flex-1 py-3 px-4 rounded-lg text-sm font-medium transition-all duration-300 ${
-                isLogin 
-                  ? 'bg-background shadow-soft text-foreground' 
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
+              className={`flex-1 py-3 px-4 rounded-lg text-sm font-medium transition-all duration-300 ${isLogin
+                ? 'bg-background shadow-soft text-foreground'
+                : 'text-muted-foreground hover:text-foreground'
+                }`}
             >
               Sign In
             </button>
             <button
               onClick={() => setIsLogin(false)}
-              className={`flex-1 py-3 px-4 rounded-lg text-sm font-medium transition-all duration-300 ${
-                !isLogin 
-                  ? 'bg-background shadow-soft text-foreground' 
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
+              className={`flex-1 py-3 px-4 rounded-lg text-sm font-medium transition-all duration-300 ${!isLogin
+                ? 'bg-background shadow-soft text-foreground'
+                : 'text-muted-foreground hover:text-foreground'
+                }`}
             >
               Create Account
             </button>
@@ -156,18 +154,18 @@ export default function Auth() {
                     <FormItem>
                       <FormLabel className="text-sm font-medium">Email</FormLabel>
                       <FormControl>
-                        <Input 
-                          placeholder="you@example.com" 
+                        <Input
+                          placeholder="you@example.com"
                           type="email"
                           className="h-12 rounded-xl border-border/60 focus:border-accent bg-background/50"
-                          {...field} 
+                          {...field}
                         />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                
+
                 <FormField
                   control={loginForm.control}
                   name="password"
@@ -176,11 +174,11 @@ export default function Auth() {
                       <FormLabel className="text-sm font-medium">Password</FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <Input 
-                            placeholder="••••••••" 
+                          <Input
+                            placeholder="••••••••"
                             type={showPassword ? 'text' : 'password'}
                             className="h-12 rounded-xl border-border/60 focus:border-accent bg-background/50 pr-12"
-                            {...field} 
+                            {...field}
                           />
                           <button
                             type="button"
@@ -196,8 +194,8 @@ export default function Auth() {
                   )}
                 />
 
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   disabled={isLoading}
                   className="w-full h-12 rounded-xl btn-primary text-base"
                 >
@@ -216,43 +214,46 @@ export default function Auth() {
             /* Signup Form */
             <Form {...signupForm}>
               <form onSubmit={signupForm.handleSubmit(handleSignup)} className="space-y-5">
-                <FormField
-                  control={signupForm.control}
-                  name="fullName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium">Full Name</FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="John Doe" 
-                          className="h-12 rounded-xl border-border/60 focus:border-accent bg-background/50"
-                          {...field} 
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
+                {/* AUTH.TSX: Temporary replacement for the entire Full Name FormField block: */}
+                <div className="space-y-2">
+                  <FormLabel className="text-sm font-medium">Full Name</FormLabel>
+                  <Input
+                    placeholder=""
+                    className="h-12 rounded-xl border-border/60 focus:border-accent bg-background/50"
+                    // Manually hook up RHF binding:
+                    value={signupForm.watch('fullName')}
+                    onChange={(e) => {
+                      signupForm.setValue('fullName', e.target.value);
+                      signupForm.clearErrors('fullName'); // Clear error on change for better UX
+                    }}
+                    onBlur={() => signupForm.trigger('fullName')}
+                  />
+                  {signupForm.formState.errors.fullName && (
+                    <p className="text-sm text-red-500 mt-1">{signupForm.formState.errors.fullName.message}</p>
                   )}
-                />
+                </div>
 
-                <FormField
-                  control={signupForm.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium">Email</FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="you@example.com" 
-                          type="email"
-                          className="h-12 rounded-xl border-border/60 focus:border-accent bg-background/50"
-                          {...field} 
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
+                {/* Email */}
+                {/* Replace the original FormField for 'email' with this custom div block */}
+                <div className="space-y-2">
+                  <FormLabel className="text-sm font-medium">Email</FormLabel>
+                  <Input
+                    placeholder=""
+                    type="email"
+                    className="h-12 rounded-xl border-border/60 focus:border-accent bg-background/50"
+                    // Manually hook up RHF binding:
+                    value={signupForm.watch('email')}
+                    onChange={(e) => {
+                      signupForm.setValue('email', e.target.value);
+                      signupForm.clearErrors('email');
+                    }}
+                    onBlur={() => signupForm.trigger('email')}
+                  />
+                  {signupForm.formState.errors.email && (
+                    <p className="text-sm text-red-500 mt-1">{signupForm.formState.errors.email.message}</p>
                   )}
-                />
-                
+                </div>
+
                 <FormField
                   control={signupForm.control}
                   name="password"
@@ -261,11 +262,11 @@ export default function Auth() {
                       <FormLabel className="text-sm font-medium">Password</FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <Input 
-                            placeholder="••••••••" 
+                          <Input
+                            placeholder=""
                             type={showPassword ? 'text' : 'password'}
                             className="h-12 rounded-xl border-border/60 focus:border-accent bg-background/50 pr-12"
-                            {...field} 
+                            {...field}
                           />
                           <button
                             type="button"
@@ -288,20 +289,33 @@ export default function Auth() {
                     <FormItem>
                       <FormLabel className="text-sm font-medium">Confirm Password</FormLabel>
                       <FormControl>
-                        <Input 
-                          placeholder="••••••••" 
-                          type={showPassword ? 'text' : 'password'}
-                          className="h-12 rounded-xl border-border/60 focus:border-accent bg-background/50"
-                          {...field} 
-                        />
+                        {/* ADDED: Relative wrapper div to hold input and button */}
+                        <div className="relative">
+                          <Input
+                            placeholder=""
+                            // IMPORTANT: The pr-12 class ensures space for the button/icon
+                            // This is essential if the button is taking up space inside the wrapper
+                            className="h-12 rounded-xl border-border/60 focus:border-accent bg-background/50 pr-12"
+                            type={showPassword ? 'text' : 'password'}
+                            {...field} // Spreads value, onChange, etc.
+                          />
+                          {/* ADDED: The Eye Toggle Button for consistency and event handling */}
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                          >
+                            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                          </button>
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   disabled={isLoading}
                   className="w-full h-12 rounded-xl btn-accent text-base"
                 >
@@ -321,7 +335,7 @@ export default function Auth() {
           {/* Footer */}
           <p className="text-center text-sm text-muted-foreground mt-6">
             {isLogin ? "Don't have an account? " : "Already have an account? "}
-            <button 
+            <button
               onClick={toggleMode}
               className="text-foreground font-medium hover:underline"
             >
