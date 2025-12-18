@@ -6,6 +6,12 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/use-auth";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import TutorAuth from "./pages/TutorAuth";
+import TutorDashboard from "./pages/tutor/TutorDashboard";
+import TutorCourses from "./pages/tutor/TutorCourses";
+import TutorStudents from "./pages/tutor/TutorStudents";
+import TutorAnalytics from "./pages/tutor/TutorAnalytics";
+import TutorEarnings from "./pages/tutor/TutorEarnings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,9 +34,28 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+function TutorProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-foreground/20 border-t-foreground rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!user || user.role !== 'tutor') {
+    return <Navigate to="/auth/tutor" replace />;
+  }
+
+  return <>{children}</>;
+}
+
 const AppRoutes = () => (
   <Routes>
     <Route path="/" element={<Auth />} />
+    <Route path="/auth/tutor" element={<TutorAuth />} />
     <Route 
       path="/dashboard" 
       element={
@@ -39,6 +64,19 @@ const AppRoutes = () => (
         </ProtectedRoute>
       } 
     />
+    <Route 
+      path="/tutor" 
+      element={
+        <TutorProtectedRoute>
+          <TutorDashboard />
+        </TutorProtectedRoute>
+      }
+    >
+      <Route index element={<TutorCourses />} />
+      <Route path="students" element={<TutorStudents />} />
+      <Route path="analytics" element={<TutorAnalytics />} />
+      <Route path="earnings" element={<TutorEarnings />} />
+    </Route>
     <Route path="*" element={<NotFound />} />
   </Routes>
 );
