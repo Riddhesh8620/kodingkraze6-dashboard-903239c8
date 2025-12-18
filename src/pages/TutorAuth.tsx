@@ -1,15 +1,14 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Eye, EyeOff, Sparkles, ArrowRight, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, GraduationCap, ArrowRight, Loader2, ArrowLeft } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { SignInResult } from '@/api/signinresult';
 
 const loginSchema = z.object({
   email: z.string().trim().email({ message: "Invalid email address" }).max(255),
@@ -29,7 +28,7 @@ const signupSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 type SignupFormData = z.infer<typeof signupSchema>;
 
-export default function Auth() {
+export default function TutorAuth() {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -38,8 +37,8 @@ export default function Auth() {
   const { toast } = useToast();
 
   useEffect(() => {
-    if (user) {
-      navigate('/');
+    if (user && user.role === 'tutor') {
+      navigate('/tutor');
     }
   }, [user, navigate]);
 
@@ -55,49 +54,72 @@ export default function Auth() {
 
   const handleLogin = async (data: LoginFormData) => {
     setIsLoading(true);
-    const result: SignInResult = await signIn(data.email, data.password);
-    setIsLoading(false);
+    try {
+      const response = await fetch('/api/tutor/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: data.email, password: data.password }),
+      });
 
-    if (result.error) {
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Login failed');
+      }
+
+      const result = await response.json();
+      
+      // Store tutor data in localStorage
+      localStorage.setItem('auth_token', result.token);
+      localStorage.setItem('auth_user', JSON.stringify({ ...result, role: 'tutor' }));
+      
+      toast({
+        variant: "success",
+        title: "Welcome back, Tutor!",
+        description: "You have successfully logged in.",
+      });
+      
+      window.location.href = '/tutor';
+    } catch (err) {
       toast({
         variant: "destructive",
         title: "Login failed",
-        description: result.error.message === "Invalid login credentials"
-          ? "Incorrect email or password. Please try again."
-          : result.error.message,
+        description: (err as Error).message,
       });
-    } else {
-      toast({
-        variant: "success",
-        title: "Welcome back! " + (result.newUser?.name || ""),
-        description: "You have successfully logged in.",
-      });
-      navigate('/dashboard');
     }
+    setIsLoading(false);
   };
 
   const handleSignup = async (data: SignupFormData) => {
     setIsLoading(true);
-    const { error } = await signUp(data.email, data.password, data.fullName);
-    setIsLoading(false);
+    try {
+      const response = await fetch('/api/tutor/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          email: data.email, 
+          password: data.password, 
+          name: data.fullName 
+        }),
+      });
 
-    if (error) {
-      const errorMessage = error.message.includes("already registered")
-        ? "This email is already registered. Try logging in instead."
-        : error.message;
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Signup failed');
+      }
 
+      toast({
+        title: "Welcome aboard, Tutor!",
+        description: "Your tutor account has been created. Please log in.",
+      });
+      setIsLogin(true);
+    } catch (err) {
       toast({
         variant: "destructive",
         title: "Signup failed",
-        description: errorMessage,
+        description: (err as Error).message,
       });
-    } else {
-      toast({
-        title: "Welcome aboard!",
-        description: "Your account has been created successfully.",
-      });
-      navigate('/dashboard');
     }
+    setIsLoading(false);
   };
 
   const toggleMode = () => {
@@ -108,24 +130,33 @@ export default function Auth() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 pattern-dots relative overflow-hidden">
-      {/* Background decorations */}
-      <div className="absolute top-0 right-0 w-[800px] h-[800px] rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 opacity-20 gradient-accent" />
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] rounded-full blur-3xl translate-y-1/2 -translate-x-1/3 opacity-15" style={{ background: 'hsla(200, 78%, 66%, 1)' }} />
+      {/* Background decorations - tutor theme (green/teal accent) */}
+      <div className="absolute top-0 right-0 w-[800px] h-[800px] rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 opacity-20" style={{ background: 'linear-gradient(135deg, hsl(160, 84%, 45%) 0%, hsl(180, 70%, 50%) 100%)' }} />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] rounded-full blur-3xl translate-y-1/2 -translate-x-1/3 opacity-15" style={{ background: 'hsl(160, 78%, 50%)' }} />
 
       {/* Geometric shapes */}
       <div className="absolute top-1/4 left-1/4 w-32 h-32 border-2 border-foreground/5 rounded-full animate-pulse hidden lg:block" />
       <div className="absolute bottom-1/4 right-1/4 w-24 h-24 border-2 border-foreground/5 rotate-45 hidden lg:block" />
 
       <div className="w-full max-w-md relative z-10">
+        {/* Back to student login */}
+        <Link 
+          to="/" 
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6 transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Student Login
+        </Link>
+
         {/* Logo */}
         <div className="text-center mb-8 animate-fade-up">
           <div className="inline-flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-xl gradient-accent flex items-center justify-center shadow-glow">
-              <span className="text-2xl font-bold text-background">K</span>
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style={{ background: 'linear-gradient(135deg, hsl(160, 84%, 45%) 0%, hsl(180, 70%, 50%) 100%)' }}>
+              <GraduationCap className="h-6 w-6 text-white" />
             </div>
             <span className="text-2xl font-bold tracking-tight font-display">KodingKraze6</span>
           </div>
-          <p className="text-muted-foreground">Premium courses. Real skills. Your pace.</p>
+          <p className="text-muted-foreground">Tutor Portal - Inspire & Educate</p>
         </div>
 
         {/* Auth Card */}
@@ -137,7 +168,7 @@ export default function Auth() {
               className={`flex-1 py-3 px-4 rounded-lg text-sm font-medium transition-all duration-300 ${isLogin
                 ? 'bg-background shadow-soft text-foreground'
                 : 'text-muted-foreground hover:text-foreground'
-                }`}
+              }`}
             >
               Sign In
             </button>
@@ -146,9 +177,9 @@ export default function Auth() {
               className={`flex-1 py-3 px-4 rounded-lg text-sm font-medium transition-all duration-300 ${!isLogin
                 ? 'bg-background shadow-soft text-foreground'
                 : 'text-muted-foreground hover:text-foreground'
-                }`}
+              }`}
             >
-              Create Account
+              Become a Tutor
             </button>
           </div>
 
@@ -164,9 +195,9 @@ export default function Auth() {
                       <FormLabel className="text-sm font-medium">Email</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="you@example.com"
+                          placeholder="tutor@example.com"
                           type="email"
-                          className="h-12 rounded-xl border-border/60 focus:border-accent bg-background/50"
+                          className="h-12 rounded-xl border-border/60 focus:border-emerald-500 bg-background/50"
                           {...field}
                         />
                       </FormControl>
@@ -186,7 +217,7 @@ export default function Auth() {
                           <Input
                             placeholder="••••••••"
                             type={showPassword ? 'text' : 'password'}
-                            className="h-12 rounded-xl border-border/60 focus:border-accent bg-background/50 pr-12"
+                            className="h-12 rounded-xl border-border/60 focus:border-emerald-500 bg-background/50 pr-12"
                             {...field}
                           />
                           <button
@@ -206,13 +237,14 @@ export default function Auth() {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full h-12 rounded-xl btn-primary text-base"
+                  className="w-full h-12 rounded-xl text-base text-white"
+                  style={{ background: 'linear-gradient(135deg, hsl(160, 84%, 45%) 0%, hsl(180, 70%, 50%) 100%)' }}
                 >
                   {isLoading ? (
                     <Loader2 className="h-5 w-5 animate-spin" />
                   ) : (
                     <>
-                      Sign In
+                      Sign In as Tutor
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </>
                   )}
@@ -223,45 +255,42 @@ export default function Auth() {
             /* Signup Form */
             <Form {...signupForm}>
               <form onSubmit={signupForm.handleSubmit(handleSignup)} className="space-y-5">
-                {/* AUTH.TSX: Temporary replacement for the entire Full Name FormField block: */}
-                <div className="space-y-2">
-                  <FormLabel className="text-sm font-medium">Full Name</FormLabel>
-                  <Input
-                    placeholder=""
-                    className="h-12 rounded-xl border-border/60 focus:border-accent bg-background/50"
-                    // Manually hook up RHF binding:
-                    value={signupForm.watch('fullName')}
-                    onChange={(e) => {
-                      signupForm.setValue('fullName', e.target.value);
-                      signupForm.clearErrors('fullName'); // Clear error on change for better UX
-                    }}
-                    onBlur={() => signupForm.trigger('fullName')}
-                  />
-                  {signupForm.formState.errors.fullName && (
-                    <p className="text-sm text-red-500 mt-1">{signupForm.formState.errors.fullName.message}</p>
+                <FormField
+                  control={signupForm.control}
+                  name="fullName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium">Full Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Your full name"
+                          className="h-12 rounded-xl border-border/60 focus:border-emerald-500 bg-background/50"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
                   )}
-                </div>
+                />
 
-                {/* Email */}
-                {/* Replace the original FormField for 'email' with this custom div block */}
-                <div className="space-y-2">
-                  <FormLabel className="text-sm font-medium">Email</FormLabel>
-                  <Input
-                    placeholder=""
-                    type="email"
-                    className="h-12 rounded-xl border-border/60 focus:border-accent bg-background/50"
-                    // Manually hook up RHF binding:
-                    value={signupForm.watch('email')}
-                    onChange={(e) => {
-                      signupForm.setValue('email', e.target.value);
-                      signupForm.clearErrors('email');
-                    }}
-                    onBlur={() => signupForm.trigger('email')}
-                  />
-                  {signupForm.formState.errors.email && (
-                    <p className="text-sm text-red-500 mt-1">{signupForm.formState.errors.email.message}</p>
+                <FormField
+                  control={signupForm.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium">Email</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="tutor@example.com"
+                          type="email"
+                          className="h-12 rounded-xl border-border/60 focus:border-emerald-500 bg-background/50"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
                   )}
-                </div>
+                />
 
                 <FormField
                   control={signupForm.control}
@@ -272,9 +301,9 @@ export default function Auth() {
                       <FormControl>
                         <div className="relative">
                           <Input
-                            placeholder=""
+                            placeholder="••••••••"
                             type={showPassword ? 'text' : 'password'}
-                            className="h-12 rounded-xl border-border/60 focus:border-accent bg-background/50 pr-12"
+                            className="h-12 rounded-xl border-border/60 focus:border-emerald-500 bg-background/50 pr-12"
                             {...field}
                           />
                           <button
@@ -298,17 +327,13 @@ export default function Auth() {
                     <FormItem>
                       <FormLabel className="text-sm font-medium">Confirm Password</FormLabel>
                       <FormControl>
-                        {/* ADDED: Relative wrapper div to hold input and button */}
                         <div className="relative">
                           <Input
-                            placeholder=""
-                            // IMPORTANT: The pr-12 class ensures space for the button/icon
-                            // This is essential if the button is taking up space inside the wrapper
-                            className="h-12 rounded-xl border-border/60 focus:border-accent bg-background/50 pr-12"
+                            placeholder="••••••••"
                             type={showPassword ? 'text' : 'password'}
-                            {...field} // Spreads value, onChange, etc.
+                            className="h-12 rounded-xl border-border/60 focus:border-emerald-500 bg-background/50 pr-12"
+                            {...field}
                           />
-                          {/* ADDED: The Eye Toggle Button for consistency and event handling */}
                           <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
@@ -326,14 +351,15 @@ export default function Auth() {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full h-12 rounded-xl btn-accent text-base"
+                  className="w-full h-12 rounded-xl text-base text-white"
+                  style={{ background: 'linear-gradient(135deg, hsl(160, 84%, 45%) 0%, hsl(180, 70%, 50%) 100%)' }}
                 >
                   {isLoading ? (
                     <Loader2 className="h-5 w-5 animate-spin" />
                   ) : (
                     <>
-                      <Sparkles className="mr-2 h-4 w-4" />
-                      Create Account
+                      <GraduationCap className="mr-2 h-4 w-4" />
+                      Create Tutor Account
                     </>
                   )}
                 </Button>
@@ -343,7 +369,7 @@ export default function Auth() {
 
           {/* Footer */}
           <p className="text-center text-sm text-muted-foreground mt-6">
-            {isLogin ? "Don't have an account? " : "Already have an account? "}
+            {isLogin ? "New tutor? " : "Already a tutor? "}
             <button
               onClick={toggleMode}
               className="text-foreground font-medium hover:underline"
@@ -355,15 +381,7 @@ export default function Auth() {
 
         {/* Terms */}
         <p className="text-center text-xs text-muted-foreground mt-6 animate-fade-up" style={{ animationDelay: '0.2s' }}>
-          By continuing, you agree to our Terms of Service and Privacy Policy.
-        </p>
-
-        {/* Tutor Link */}
-        <p className="text-center text-sm text-muted-foreground mt-4">
-          Are you a tutor?{' '}
-          <a href="/auth/tutor" className="text-foreground font-medium hover:underline">
-            Sign in here
-          </a>
+          By continuing, you agree to our Tutor Terms of Service and Privacy Policy.
         </p>
       </div>
     </div>
