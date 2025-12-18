@@ -1,15 +1,14 @@
 export interface Course {
   id: string;
   title: string;
-  instructor: string;
-  price: number;
-  originalPrice?: number;
-  rating: number;
-  students: number;
-  duration: string;
-  level: 'Beginner' | 'Intermediate' | 'Advanced';
+  instructor?: string;
+  priceInPaisa: number;
+  rating?: number;
+  students?: number;
+  duration?: string;
+  level?: 'Beginner' | 'Intermediate' | 'Advanced';
   image: string;
-  category: string;
+  category?: string;
   description?: string;
   lessons?: number;
 }

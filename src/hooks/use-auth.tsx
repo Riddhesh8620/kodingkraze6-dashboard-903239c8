@@ -1,11 +1,6 @@
+import { User } from '@/api/user';
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
-
-interface User {
-  id: string;
-  email: string;
-  fullName?: string;
-}
-
+import { SignInResult } from '@/api/signinresult';
 interface AuthContextType {
   user: User | null;
   token: string | null;
@@ -29,7 +24,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Check for existing session in localStorage
     const storedToken = localStorage.getItem(TOKEN_KEY);
     const storedUser = localStorage.getItem(USER_KEY);
-    
+
     if (storedToken && storedUser) {
       setToken(storedToken);
       setUser(JSON.parse(storedUser));
@@ -44,53 +39,68 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password, name: fullName }),
       });
-      
+
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.message || 'Registration failed');
       }
-      
+
       return { error: null };
     } catch (err) {
       return { error: err as Error };
     }
   };
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = async (email: string, password: string): Promise<SignInResult> => {
     try {
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
-      
+
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.message || 'Login failed');
       }
-      
+
       const data = await response.json();
-      const newToken = data.token;
+
+      // 1. Construct the User object, ensuring the key matches your User interface
       const newUser: User = {
-        id: data.user?.id || data.id || email,
-        email: data.user?.email || email,
-        fullName: data.user?.full_name || data.full_name,
+        id: data.id,
+        role: data.role,
+        name: data.name,
+        email: data.email,
+        // OR: fullName: data.user?.full_name || data.full_name, // If your interface uses 'fullName'
       };
-      
-      localStorage.setItem(TOKEN_KEY, newToken);
+
       localStorage.setItem(USER_KEY, JSON.stringify(newUser));
-      setToken(newToken);
       setUser(newUser);
-      
-      return { error: null };
+
+      // 2. Return the success object with the newUser
+      return { error: null, newUser };
+
     } catch (err) {
+      // 3. Return the error object (newUser is undefined, which is optional)
       return { error: err as Error };
     }
   };
 
   const signOut = async () => {
+    try {
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+    catch (err) {
+
+    }
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
+    cookieStore.delete('');
     setToken(null);
     setUser(null);
   };

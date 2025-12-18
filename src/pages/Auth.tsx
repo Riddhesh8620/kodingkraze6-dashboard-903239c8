@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
+import { SignInResult } from '@/api/signinresult';
 
 const loginSchema = z.object({
   email: z.string().trim().email({ message: "Invalid email address" }).max(255),
@@ -54,17 +55,24 @@ export default function Auth() {
 
   const handleLogin = async (data: LoginFormData) => {
     setIsLoading(true);
-    const { error } = await signIn(data.email, data.password);
+    const result: SignInResult = await signIn(data.email, data.password);
     setIsLoading(false);
 
-    if (error) {
+    if (result.error) {
       toast({
         variant: "destructive",
         title: "Login failed",
-        description: error.message === "Invalid login credentials"
+        description: result.error.message === "Invalid login credentials"
           ? "Incorrect email or password. Please try again."
-          : error.message,
+          : result.error.message,
       });
+    } else {
+      toast({
+        variant: "success",
+        title: "Welcome back! " + (result.newUser?.name || ""),
+        description: "You have successfully logged in.",
+      });
+      navigate('/dashboard');
     }
   };
 
@@ -88,6 +96,7 @@ export default function Auth() {
         title: "Welcome aboard!",
         description: "Your account has been created successfully.",
       });
+      navigate('/dashboard');
     }
   };
 

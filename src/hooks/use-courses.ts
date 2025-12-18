@@ -1,11 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
 import { coursesApi, Course } from "@/api/courses";
 
-export const useCourses = () => {
-  return useQuery<Course[]>({
-    queryKey: ["courses"],
-    queryFn: coursesApi.getAll,
-  });
+export const useCourses = async () => {
+  const response = await fetch('api/courses',
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+  if (!response.ok) {
+    throw new Error('Failed to fetch courses');
+  }
+  return response.json() as Promise<Course[]>;
 };
 
 export const useCourse = (id: string) => {

@@ -3,8 +3,9 @@ export interface User {
   name: string;
   email: string;
   avatar?: string;
-  purchasedCourses: string[];
-  createdAt: string;
+  purchasedCourses?: string[];
+  createdAt?: string;
+  role: string;
 }
 
 export interface PurchaseRequest {
