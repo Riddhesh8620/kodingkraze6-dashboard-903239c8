@@ -12,6 +12,10 @@ import TutorCourses from "./pages/tutor/TutorCourses";
 import TutorStudents from "./pages/tutor/TutorStudents";
 import TutorAnalytics from "./pages/tutor/TutorAnalytics";
 import TutorEarnings from "./pages/tutor/TutorEarnings";
+import InterviewReadyLanding from "./pages/interview/InterviewReadyLanding";
+import PreferenceSelection from "./pages/interview/PreferenceSelection";
+import TestView from "./pages/interview/TestView";
+import TestResults from "./pages/interview/TestResults";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -61,6 +65,31 @@ const AppRoutes = () => (
       element={
         <ProtectedRoute>
           <Index />
+        </ProtectedRoute>
+      } 
+    />
+    <Route path="/interview" element={<InterviewReadyLanding />} />
+    <Route 
+      path="/interview/preferences" 
+      element={
+        <ProtectedRoute>
+          <PreferenceSelection />
+        </ProtectedRoute>
+      } 
+    />
+    <Route 
+      path="/interview/test" 
+      element={
+        <ProtectedRoute>
+          <TestView />
+        </ProtectedRoute>
+      } 
+    />
+    <Route 
+      path="/interview/results" 
+      element={
+        <ProtectedRoute>
+          <TestResults />
         </ProtectedRoute>
       } 
     />

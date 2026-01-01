@@ -1,7 +1,8 @@
-import { Search, Bell, User, Menu, Zap, LogOut } from "lucide-react";
+import { Search, Bell, User, Menu, Zap, LogOut, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/use-auth";
+import { useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,6 +13,7 @@ import {
 
 const Header = () => {
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border glass">
@@ -43,6 +45,13 @@ const Header = () => {
               {item}
             </a>
           ))}
+          <button
+            onClick={() => navigate("/interview")}
+            className="flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+          >
+            <Target className="h-4 w-4" />
+            Interview Ready
+          </button>
         </nav>
 
         {/* Search Bar */}
