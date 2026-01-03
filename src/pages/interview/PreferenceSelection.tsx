@@ -58,15 +58,22 @@ const PreferenceSelection = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="container py-12">
-        {/* Back Button */}
-        <Button 
-          variant="ghost" 
-          onClick={() => navigate("/interview")}
-          className="mb-8"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back
-        </Button>
+        {/* Navigation */}
+        <div className="flex items-center gap-4 mb-8">
+          <Button 
+            variant="ghost" 
+            onClick={() => navigate("/interview")}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back
+          </Button>
+          <Button 
+            variant="outline" 
+            onClick={() => navigate("/dashboard")}
+          >
+            Dashboard
+          </Button>
+        </div>
 
         {/* Header */}
         <div className="max-w-2xl mx-auto text-center mb-12">

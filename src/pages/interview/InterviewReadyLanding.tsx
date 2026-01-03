@@ -1,6 +1,6 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Brain, Code, Zap, Target, Clock, Shield } from "lucide-react";
+import { ArrowLeft, ArrowRight, Brain, Code, Zap, Target, Clock, Shield } from "lucide-react";
 
 const InterviewReadyLanding = () => {
   const navigate = useNavigate();
@@ -31,6 +31,17 @@ const InterviewReadyLanding = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Navigation */}
+      <div className="container py-4">
+        <Link 
+          to="/dashboard"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Dashboard
+        </Link>
+      </div>
+
       {/* Hero Section */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 pattern-grid opacity-5" />
