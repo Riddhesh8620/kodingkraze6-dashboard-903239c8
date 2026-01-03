@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -39,7 +39,7 @@ export default function Auth() {
 
   useEffect(() => {
     if (user) {
-      navigate('/');
+      navigate('/dashboard');
     }
   }, [user, navigate]);
 
@@ -361,9 +361,9 @@ export default function Auth() {
         {/* Tutor Link */}
         <p className="text-center text-sm text-muted-foreground mt-4">
           Are you a tutor?{' '}
-          <a href="/auth/tutor" className="text-foreground font-medium hover:underline">
+          <Link to="/auth/tutor" className="text-foreground font-medium hover:underline">
             Sign in here
-          </a>
+          </Link>
         </p>
       </div>
     </div>

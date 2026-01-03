@@ -2,7 +2,7 @@ import { Search, Bell, User, Menu, Zap, LogOut, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/use-auth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,22 +36,27 @@ const Header = () => {
 
         {/* Navigation */}
         <nav className="hidden lg:flex items-center gap-8">
+          <Link
+            to="/dashboard"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors link-underline"
+          >
+            Dashboard
+          </Link>
           {["Courses", "Categories", "Pricing", "Community"].map((item) => (
-            <a
+            <button
               key={item}
-              href="#"
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors link-underline"
             >
               {item}
-            </a>
+            </button>
           ))}
-          <button
-            onClick={() => navigate("/interview")}
+          <Link
+            to="/interview"
             className="flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
           >
             <Target className="h-4 w-4" />
             Interview Ready
-          </button>
+          </Link>
         </nav>
 
         {/* Search Bar */}
