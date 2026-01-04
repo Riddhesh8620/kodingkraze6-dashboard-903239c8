@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Header from "@/components/dashboard/Header";
 import WelcomeHero from "@/components/dashboard/WelcomeHero";
 import StatsBar from "@/components/dashboard/StatsBar";
@@ -21,10 +22,10 @@ const Index = () => {
               <span className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Browse</span>
               <h2 className="text-3xl md:text-4xl font-bold font-display mt-2">Categories</h2>
             </div>
-            <a href="#" className="hidden sm:flex items-center gap-2 text-sm font-medium hover:gap-3 transition-all link-underline">
+            <Link to="/categories" className="hidden sm:flex items-center gap-2 text-sm font-medium hover:gap-3 transition-all link-underline">
               View all categories
               <ArrowRight className="h-4 w-4" />
-            </a>
+            </Link>
           </div>
           <Categories />
         </section>
