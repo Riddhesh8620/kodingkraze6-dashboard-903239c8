@@ -1,6 +1,8 @@
 import { LucideIcon, ArrowUpRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface CategoryCardProps {
+  id?: string;
   icon: LucideIcon;
   title: string;
   courseCount: number;
@@ -8,11 +10,24 @@ interface CategoryCardProps {
   delay?: number;
 }
 
-const CategoryCard = ({ icon: Icon, title, courseCount, color, delay = 0 }: CategoryCardProps) => {
+const categoryIdMap: Record<string, string> = {
+  "Web Development": "web-development",
+  "Mobile Apps": "mobile-apps",
+  "Data Science": "data-science",
+  "AI & ML": "ai-ml",
+  "Cloud Computing": "cloud-computing",
+  "Cybersecurity": "cybersecurity",
+};
+
+const CategoryCard = ({ id, icon: Icon, title, courseCount, color, delay = 0 }: CategoryCardProps) => {
+  const navigate = useNavigate();
+  const categoryId = id || categoryIdMap[title] || title.toLowerCase().replace(/\s+/g, '-');
+
   return (
     <div 
       className="group relative overflow-hidden rounded-2xl bg-background border border-border p-6 card-hover cursor-pointer animate-fade-up"
       style={{ animationDelay: `${delay}s` }}
+      onClick={() => navigate(`/categories/${categoryId}`)}
     >
       {/* Hover gradient */}
       <div 

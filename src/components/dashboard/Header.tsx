@@ -1,4 +1,4 @@
-import { Search, Bell, User, Menu, Zap, LogOut, Target } from "lucide-react";
+import { Search, Bell, User, Menu, Zap, LogOut, Target, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/use-auth";
@@ -42,14 +42,19 @@ const Header = () => {
           >
             Dashboard
           </Link>
-          {["Courses", "Categories", "Pricing", "Community"].map((item) => (
-            <button
-              key={item}
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors link-underline"
-            >
-              {item}
-            </button>
-          ))}
+          <Link
+            to="/categories"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors link-underline"
+          >
+            Categories
+          </Link>
+          <Link
+            to="/sessions/book"
+            className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors link-underline"
+          >
+            <Video className="h-4 w-4" />
+            1:1 Sessions
+          </Link>
           <Link
             to="/interview"
             className="flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
