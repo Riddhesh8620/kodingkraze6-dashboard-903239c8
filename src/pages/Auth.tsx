@@ -359,12 +359,12 @@ export default function Auth() {
         </p>
 
         {/* Tutor Link */}
-        <p className="text-center text-sm text-muted-foreground mt-4">
+        {/* <p className="text-center text-sm text-muted-foreground mt-4">
           Are you a tutor?{' '}
           <Link to="/auth/tutor" className="text-foreground font-medium hover:underline">
             Sign in here
           </Link>
-        </p>
+        </p> */}
       </div>
     </div>
   );
