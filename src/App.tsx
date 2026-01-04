@@ -16,6 +16,10 @@ import InterviewReadyLanding from "./pages/interview/InterviewReadyLanding";
 import PreferenceSelection from "./pages/interview/PreferenceSelection";
 import TestView from "./pages/interview/TestView";
 import TestResults from "./pages/interview/TestResults";
+import CourseDetail from "./pages/CourseDetail";
+import CategoriesListing from "./pages/CategoriesListing";
+import CategoryCourses from "./pages/CategoryCourses";
+import SessionBooking from "./pages/SessionBooking";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -65,6 +69,24 @@ const AppRoutes = () => (
       element={
         <ProtectedRoute>
           <Index />
+        </ProtectedRoute>
+      } 
+    />
+    <Route 
+      path="/courses/:id" 
+      element={
+        <ProtectedRoute>
+          <CourseDetail />
+        </ProtectedRoute>
+      } 
+    />
+    <Route path="/categories" element={<CategoriesListing />} />
+    <Route path="/categories/:categoryId" element={<CategoryCourses />} />
+    <Route 
+      path="/sessions/book" 
+      element={
+        <ProtectedRoute>
+          <SessionBooking />
         </ProtectedRoute>
       } 
     />

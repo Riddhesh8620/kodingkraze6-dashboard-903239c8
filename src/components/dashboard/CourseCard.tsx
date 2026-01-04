@@ -1,37 +1,45 @@
 import { Clock, Users, Star, Play, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
 
 interface CourseCardProps {
+  id?: string;
   title: string;
-  instructor: string;
+  instructor?: string;
   image: string;
-  price: number;
+  price?: number;
+  priceInPaisa?: number;
   originalPrice?: number;
-  rating: number;
-  students: number;
-  duration: string;
-  category: string;
-  categoryColor: string;
+  rating?: number;
+  students?: number;
+  duration?: string;
+  category?: string;
+  categoryColor?: string;
   featured?: boolean;
   delay?: number;
 }
 
 const CourseCard = ({
+  id,
   title,
   instructor,
   image,
   price,
+  priceInPaisa,
   originalPrice,
-  rating,
-  students,
-  duration,
-  category,
-  categoryColor,
+  rating = 0,
+  students = 0,
+  duration = "",
+  category = "",
+  categoryColor = "hsl(217, 91%, 60%)",
   featured = false,
   delay = 0,
 }: CourseCardProps) => {
-  return (
+  const displayPrice = price ?? (priceInPaisa ? priceInPaisa / 100 : 0);
+  const displayOriginalPrice = originalPrice ? (originalPrice > 1000 ? originalPrice / 100 : originalPrice) : undefined;
+  
+  const cardContent = (
     <div 
       className="group relative overflow-hidden rounded-2xl border border-border bg-background card-hover animate-fade-up"
       style={{ animationDelay: `${delay}s` }}
@@ -63,13 +71,15 @@ const CourseCard = ({
       {/* Content */}
       <div className="p-6">
         {/* Category */}
-        <Badge 
-          variant="secondary" 
-          className="mb-4 font-medium rounded-full px-3"
-          style={{ backgroundColor: `${categoryColor}12`, color: categoryColor }}
-        >
-          {category}
-        </Badge>
+        {category && (
+          <Badge 
+            variant="secondary" 
+            className="mb-4 font-medium rounded-full px-3"
+            style={{ backgroundColor: `${categoryColor}12`, color: categoryColor }}
+          >
+            {category}
+          </Badge>
+        )}
         
         {/* Title */}
         <h3 className="font-display font-semibold text-lg mb-2 line-clamp-2 group-hover:text-muted-foreground transition-colors min-h-[3.5rem]">
@@ -77,7 +87,7 @@ const CourseCard = ({
         </h3>
         
         {/* Instructor */}
-        <p className="text-sm text-muted-foreground mb-5">by {instructor}</p>
+        {instructor && <p className="text-sm text-muted-foreground mb-5">by {instructor}</p>}
         
         {/* Stats */}
         <div className="flex items-center gap-5 text-sm text-muted-foreground mb-5">
@@ -98,9 +108,9 @@ const CourseCard = ({
         {/* Price & CTA */}
         <div className="flex items-center justify-between pt-5 border-t border-border">
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold font-display">${price}</span>
-            {originalPrice && (
-              <span className="text-sm text-muted-foreground line-through">${originalPrice}</span>
+            <span className="text-2xl font-bold font-display">${displayPrice}</span>
+            {displayOriginalPrice && (
+              <span className="text-sm text-muted-foreground line-through">${displayOriginalPrice}</span>
             )}
           </div>
           <Button size="sm" className="btn-primary rounded-full px-5 group/btn">
@@ -111,6 +121,12 @@ const CourseCard = ({
       </div>
     </div>
   );
+
+  if (id) {
+    return <Link to={`/courses/${id}`}>{cardContent}</Link>;
+  }
+  
+  return cardContent;
 };
 
 export default CourseCard;
