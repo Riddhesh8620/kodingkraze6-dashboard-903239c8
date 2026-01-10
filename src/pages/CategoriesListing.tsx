@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, ArrowRight, Code2, Smartphone, Database, Brain, Cloud, Shield, LucideIcon } from "lucide-react";
+import { ArrowLeft, ArrowRight, Code2, Smartphone, Database, Brain, Cloud, Shield, Calculator, BarChart3, MessageSquare, Binary, Server, GitBranch, LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/dashboard/Header";
 
@@ -14,59 +14,115 @@ interface CategoryItem {
 }
 
 const categories: CategoryItem[] = [
+  // Aptitude Categories
+  { 
+    id: "logical-reasoning",
+    icon: Brain, 
+    name: "Logical Reasoning", 
+    description: "Master pattern recognition, syllogisms, blood relations, and critical thinking for competitive exams.",
+    courseCount: 12, 
+    color: "hsl(262, 83%, 58%)",
+    gradient: "from-purple-500/20 to-purple-600/5"
+  },
+  { 
+    id: "analytical-reasoning",
+    icon: BarChart3, 
+    name: "Analytical Reasoning", 
+    description: "Develop strong analytical skills with data interpretation, puzzles, and complex problem-solving.",
+    courseCount: 10, 
+    color: "hsl(199, 89%, 48%)",
+    gradient: "from-cyan-500/20 to-cyan-600/5"
+  },
+  { 
+    id: "verbal-ability",
+    icon: MessageSquare, 
+    name: "Verbal Ability", 
+    description: "Enhance reading comprehension, vocabulary, grammar, and sentence correction skills.",
+    courseCount: 8, 
+    color: "hsl(340, 82%, 52%)",
+    gradient: "from-pink-500/20 to-pink-600/5"
+  },
+  { 
+    id: "quantitative-aptitude",
+    icon: Calculator, 
+    name: "Quantitative Aptitude", 
+    description: "Complete preparation for arithmetic, algebra, geometry, and data interpretation.",
+    courseCount: 15, 
+    color: "hsl(142, 71%, 45%)",
+    gradient: "from-green-500/20 to-green-600/5"
+  },
+  // Engineering & IT Categories
   { 
     id: "web-development",
     icon: Code2, 
     name: "Web Development", 
     description: "Master frontend and backend technologies including React, Node.js, and modern web frameworks.",
-    courseCount: 48, 
+    courseCount: 24, 
     color: "hsl(217, 91%, 60%)",
     gradient: "from-blue-500/20 to-blue-600/5"
   },
   { 
-    id: "mobile-apps",
-    icon: Smartphone, 
-    name: "Mobile Apps", 
-    description: "Build native iOS and Android applications with Swift, Kotlin, React Native, and Flutter.",
-    courseCount: 32, 
-    color: "hsl(262, 83%, 58%)",
-    gradient: "from-purple-500/20 to-purple-600/5"
+    id: "dsa",
+    icon: Binary, 
+    name: "Data Structures & Algorithms", 
+    description: "Comprehensive DSA preparation for coding interviews and competitive programming.",
+    courseCount: 18, 
+    color: "hsl(25, 95%, 53%)",
+    gradient: "from-orange-500/20 to-orange-600/5"
   },
   { 
     id: "data-science",
     icon: Database, 
     name: "Data Science", 
     description: "Analyze data, build models, and extract insights using Python, SQL, and visualization tools.",
-    courseCount: 27, 
-    color: "hsl(142, 71%, 45%)",
-    gradient: "from-green-500/20 to-green-600/5"
-  },
-  { 
-    id: "ai-ml",
-    icon: Brain, 
-    name: "AI & Machine Learning", 
-    description: "Dive deep into neural networks, deep learning, NLP, and cutting-edge AI technologies.",
-    courseCount: 21, 
-    color: "hsl(340, 82%, 52%)",
-    gradient: "from-pink-500/20 to-pink-600/5"
+    courseCount: 16, 
+    color: "hsl(280, 70%, 50%)",
+    gradient: "from-violet-500/20 to-violet-600/5"
   },
   { 
     id: "cloud-computing",
     icon: Cloud, 
     name: "Cloud Computing", 
     description: "Master AWS, Azure, GCP and learn to architect scalable cloud-native applications.",
-    courseCount: 19, 
+    courseCount: 14, 
     color: "hsl(199, 89%, 48%)",
-    gradient: "from-cyan-500/20 to-cyan-600/5"
+    gradient: "from-sky-500/20 to-sky-600/5"
   },
   { 
     id: "cybersecurity",
     icon: Shield, 
     name: "Cybersecurity", 
-    description: "Learn ethical hacking, penetration testing, and security best practices to protect systems.",
-    courseCount: 15, 
-    color: "hsl(25, 95%, 53%)",
-    gradient: "from-orange-500/20 to-orange-600/5"
+    description: "Learn ethical hacking, penetration testing, and security best practices.",
+    courseCount: 12, 
+    color: "hsl(0, 70%, 50%)",
+    gradient: "from-red-500/20 to-red-600/5"
+  },
+  { 
+    id: "database",
+    icon: Server, 
+    name: "Database Management", 
+    description: "Master SQL, NoSQL, database design, and query optimization techniques.",
+    courseCount: 10, 
+    color: "hsl(45, 90%, 50%)",
+    gradient: "from-yellow-500/20 to-yellow-600/5"
+  },
+  { 
+    id: "mobile-apps",
+    icon: Smartphone, 
+    name: "Mobile Apps", 
+    description: "Build native iOS and Android applications with Flutter and React Native.",
+    courseCount: 14, 
+    color: "hsl(190, 80%, 45%)",
+    gradient: "from-teal-500/20 to-teal-600/5"
+  },
+  { 
+    id: "devops",
+    icon: GitBranch, 
+    name: "DevOps", 
+    description: "Master Docker, Kubernetes, CI/CD pipelines, and automated deployment practices.",
+    courseCount: 11, 
+    color: "hsl(170, 70%, 40%)",
+    gradient: "from-emerald-500/20 to-emerald-600/5"
   },
 ];
 
