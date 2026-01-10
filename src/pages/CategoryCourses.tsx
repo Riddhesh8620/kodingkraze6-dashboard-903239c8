@@ -63,10 +63,10 @@ const mockCoursesByCategory: Record<string, any[]> = {
       id: "1",
       title: "Complete React Development Masterclass",
       instructor: "Sarah Johnson",
-      priceInPaisa: 299900,
-      originalPrice: 499900,
+      discountedPrice: 299,
+      originalPrice: 499,
       rating: 4.9,
-      students: 12453,
+      // students: 12453,
       duration: "42 hours",
       level: "Intermediate",
       image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&auto=format&fit=crop&q=60",
@@ -76,7 +76,7 @@ const mockCoursesByCategory: Record<string, any[]> = {
       id: "4",
       title: "Full-Stack JavaScript Bootcamp",
       instructor: "James Wilson",
-      priceInPaisa: 279900,
+      discountedPrice: 270,
       originalPrice: 449900,
       rating: 4.6,
       students: 5432,
@@ -91,8 +91,8 @@ const mockCoursesByCategory: Record<string, any[]> = {
       id: "2",
       title: "Advanced Machine Learning & AI",
       instructor: "Dr. Michael Chen",
-      priceInPaisa: 399900,
-      originalPrice: 599900,
+      discountedPrice: 399,
+      originalPrice: 599,
       rating: 4.8,
       students: 8932,
       duration: "56 hours",
@@ -106,8 +106,8 @@ const mockCoursesByCategory: Record<string, any[]> = {
       id: "3",
       title: "iOS App Development with Swift",
       instructor: "Alex Rivera",
-      priceInPaisa: 349900,
-      originalPrice: 549900,
+      discountedPrice: 349,
+      originalPrice: 549,
       rating: 4.7,
       students: 6721,
       duration: "38 hours",
@@ -163,7 +163,7 @@ const CategoryCourses = () => {
                 id={course.id}
                 title={course.title}
                 instructor={course.instructor}
-                priceInPaisa={course.priceInPaisa}
+                discountedPrice={course.discountedPrice}
                 originalPrice={course.originalPrice}
                 rating={course.rating}
                 students={course.students}

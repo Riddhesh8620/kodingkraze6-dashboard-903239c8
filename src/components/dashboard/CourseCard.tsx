@@ -9,7 +9,7 @@ interface CourseCardProps {
   instructor?: string;
   image: string;
   price?: number;
-  priceInPaisa?: number;
+  discountedPrice?: number;
   originalPrice?: number;
   rating?: number;
   students?: number;
@@ -26,7 +26,7 @@ const CourseCard = ({
   instructor,
   image,
   price,
-  priceInPaisa,
+  discountedPrice,
   originalPrice,
   rating = 0,
   students = 0,
@@ -36,7 +36,7 @@ const CourseCard = ({
   featured = false,
   delay = 0,
 }: CourseCardProps) => {
-  const displayPrice = price ?? (priceInPaisa ? priceInPaisa / 100 : 0);
+  const displayPrice = discountedPrice;
   const displayOriginalPrice = originalPrice ? (originalPrice > 1000 ? originalPrice / 100 : originalPrice) : undefined;
   
   const cardContent = (
@@ -108,9 +108,9 @@ const CourseCard = ({
         {/* Price & CTA */}
         <div className="flex items-center justify-between pt-5 border-t border-border">
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold font-display">${displayPrice}</span>
+            <span className="text-2xl font-bold font-display">₹{displayPrice}</span>
             {displayOriginalPrice && (
-              <span className="text-sm text-muted-foreground line-through">${displayOriginalPrice}</span>
+              <span className="text-sm text-muted-foreground line-through">₹{displayOriginalPrice}</span>
             )}
           </div>
           <Button size="sm" className="btn-primary rounded-full px-5 group/btn">

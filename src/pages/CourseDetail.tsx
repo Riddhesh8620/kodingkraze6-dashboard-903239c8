@@ -10,10 +10,10 @@ const mockCourses = [
     id: "1",
     title: "Complete React Development Masterclass",
     instructor: "Sarah Johnson",
-    priceInPaisa: 299900,
-    originalPrice: 499900,
+    priceInPaisa: 299,
+    originalPrice: 499,
     rating: 4.9,
-    students: 12453,
+    // students: 124,
     duration: "42 hours",
     level: "Intermediate" as const,
     image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&auto=format&fit=crop&q=60",
@@ -40,10 +40,10 @@ const mockCourses = [
     id: "2",
     title: "Advanced Machine Learning & AI",
     instructor: "Dr. Michael Chen",
-    priceInPaisa: 399900,
-    originalPrice: 599900,
+    priceInPaisa: 399,
+    originalPrice: 599,
     rating: 4.8,
-    students: 8932,
+    students: 893,
     duration: "56 hours",
     level: "Advanced" as const,
     image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&auto=format&fit=crop&q=60",
@@ -69,8 +69,8 @@ const mockCourses = [
     id: "3",
     title: "iOS App Development with Swift",
     instructor: "Alex Rivera",
-    priceInPaisa: 349900,
-    originalPrice: 549900,
+    priceInPaisa: 349,
+    originalPrice: 549,
     rating: 4.7,
     students: 6721,
     duration: "38 hours",
@@ -103,7 +103,7 @@ const CourseDetail = () => {
   const course = mockCourses.find(c => c.id === id) || mockCourses[0];
   
   const formatPrice = (priceInPaisa: number) => {
-    return `₹${(priceInPaisa / 100).toLocaleString('en-IN')}`;
+    return `₹${(priceInPaisa).toLocaleString('en-IN')}`;
   };
 
   const levelColors = {
@@ -152,10 +152,10 @@ const CourseDetail = () => {
                   <span className="font-medium">{course.rating}</span>
                   <span className="text-muted-foreground">rating</span>
                 </div>
-                <div className="flex items-center gap-2">
+                {/* <div className="flex items-center gap-2">
                   <Users className="h-4 w-4 text-muted-foreground" />
                   <span>{course.students?.toLocaleString()} students</span>
-                </div>
+                </div> */}
                 <div className="flex items-center gap-2">
                   <Clock className="h-4 w-4 text-muted-foreground" />
                   <span>{course.duration}</span>

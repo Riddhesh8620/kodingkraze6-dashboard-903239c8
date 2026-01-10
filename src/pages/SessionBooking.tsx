@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
 import Header from "@/components/dashboard/Header";
 import { cn } from "@/lib/utils";
+import { google_meetApi } from "@/api/googlemeet";
 
 // Mock tutors
 const tutors = [
@@ -15,7 +16,7 @@ const tutors = [
     id: "1",
     name: "Sarah Johnson",
     expertise: "React, TypeScript, Web Development",
-    rate: 2999,
+    rate: 299,
     avatar: "SJ",
     rating: 4.9,
     sessions: 234,
@@ -24,7 +25,7 @@ const tutors = [
     id: "2",
     name: "Dr. Michael Chen",
     expertise: "Machine Learning, Python, AI",
-    rate: 3999,
+    rate: 399,
     avatar: "MC",
     rating: 4.8,
     sessions: 189,
@@ -33,7 +34,7 @@ const tutors = [
     id: "3",
     name: "Alex Rivera",
     expertise: "iOS, Swift, Mobile Development",
-    rate: 2499,
+    rate: 249,
     avatar: "AR",
     rating: 4.7,
     sessions: 156,
@@ -61,7 +62,7 @@ const SessionBooking = () => {
     return `https://meet.google.com/${randomId.slice(0,3)}-${randomId.slice(3,7)}-${randomId.slice(7)}`;
   };
 
-  const handleBookSession = () => {
+  const handleBookSession = async () => {
     if (!selectedTutor || !selectedDate || !selectedTime) {
       toast({
         title: "Missing Information",
@@ -73,8 +74,10 @@ const SessionBooking = () => {
 
     // Generate meet link and confirm booking
     const link = generateMeetLink();
-    setMeetLink(link);
-    setIsBooked(true);
+    if(link){
+      setMeetLink(link);
+      setIsBooked(true);
+    }
     
     toast({
       title: "Session Booked!",
