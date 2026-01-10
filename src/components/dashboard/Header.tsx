@@ -1,9 +1,8 @@
-import { Search, Bell, User, Menu, Zap, LogOut, Target, Video } from "lucide-react";
+import { Search, Bell, User, Menu, Zap, LogOut, Target, Video, PlusCircle, BookPlus, FolderPlus, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/use-auth";
 import { useNavigate, Link } from "react-router-dom";
-// ADD THESE IMPORTS (Assuming you have Shadcn Sheet)
 import {
   Sheet,
   SheetContent,
@@ -22,6 +21,9 @@ import {
 const Header = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  
+  // Check if user is admin
+  const isAdmin = user?.role === "admin";
 
   // Navigation Links shared for both Desktop and Mobile
   const NavLinks = ({ className = "" }: { className?: string }) => (
@@ -40,6 +42,31 @@ const Header = () => {
         <Target className="h-4 w-4" />
         Interview Ready
       </Link>
+    </>
+  );
+
+  // Admin Links for mobile menu
+  const AdminLinks = ({ className = "" }: { className?: string }) => (
+    <>
+      <div className={`pt-4 border-t border-border ${className}`}>
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+          Admin Actions
+        </p>
+        <Link 
+          to="/admin/add-course" 
+          className="flex items-center gap-3 text-lg py-2 text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <BookPlus className="h-5 w-5" />
+          Add Course
+        </Link>
+        <Link 
+          to="/admin/add-topic" 
+          className="flex items-center gap-3 text-lg py-2 text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <FolderPlus className="h-5 w-5" />
+          Add Topics / Questions
+        </Link>
+      </div>
     </>
   );
 
@@ -88,8 +115,22 @@ const Header = () => {
             <DropdownMenuContent align="end" className="w-56">
               <div className="px-3 py-2 text-sm">
                 <p className="font-medium truncate">{user?.email}</p>
+                {isAdmin && (
+                  <p className="text-xs text-primary font-medium mt-1">Administrator</p>
+                )}
               </div>
               <DropdownMenuSeparator />
+              {isAdmin && (
+                <>
+                  <DropdownMenuItem onClick={() => navigate("/admin/add-course")} className="cursor-pointer">
+                    <BookPlus className="mr-2 h-4 w-4" /> Add Course
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate("/admin/add-topic")} className="cursor-pointer">
+                    <FolderPlus className="mr-2 h-4 w-4" /> Add Topics / Questions
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                </>
+              )}
               <DropdownMenuItem onClick={signOut} className="text-destructive cursor-pointer">
                 <LogOut className="mr-2 h-4 w-4" /> Sign out
               </DropdownMenuItem>
@@ -113,6 +154,9 @@ const Header = () => {
               <div className="flex flex-col gap-6 mt-10">
                 {/* We reuse our NavLinks but style them for a vertical stack */}
                 <NavLinks className="text-lg py-2 border-b border-border/50" />
+                
+                {/* Admin Links */}
+                {isAdmin && <AdminLinks />}
                 
                 <Button className="w-full mt-4" onClick={() => navigate('/sessions/book')}>
                   Book a Session
