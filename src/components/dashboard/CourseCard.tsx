@@ -1,4 +1,4 @@
-import { Clock, Users, Star, Play, ArrowUpRight } from "lucide-react";
+import { Clock, Play, ArrowUpRight, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
@@ -6,35 +6,33 @@ import { Link } from "react-router-dom";
 interface CourseCardProps {
   id?: string;
   title: string;
-  instructor?: string;
   image: string;
   price?: number;
   discountedPrice?: number;
   originalPrice?: number;
-  rating?: number;
-  students?: number;
   duration?: string;
   category?: string;
   categoryColor?: string;
   featured?: boolean;
   delay?: number;
+  lessons?: number;
+  level?: string;
 }
 
 const CourseCard = ({
   id,
   title,
-  instructor,
   image,
   price,
   discountedPrice,
   originalPrice,
-  rating = 0,
-  students = 0,
   duration = "",
   category = "",
   categoryColor = "hsl(217, 91%, 60%)",
   featured = false,
   delay = 0,
+  lessons,
+  level,
 }: CourseCardProps) => {
   const displayPrice = discountedPrice;
   const displayOriginalPrice = originalPrice ? (originalPrice > 1000 ? originalPrice / 100 : originalPrice) : undefined;
@@ -86,23 +84,25 @@ const CourseCard = ({
           {title}
         </h3>
         
-        {/* Instructor */}
-        {instructor && <p className="text-sm text-muted-foreground mb-5">by {instructor}</p>}
+        {/* Level Badge */}
+        {level && (
+          <Badge variant="outline" className="mb-3 text-xs">
+            {level}
+          </Badge>
+        )}
         
         {/* Stats */}
         <div className="flex items-center gap-5 text-sm text-muted-foreground mb-5">
           <div className="flex items-center gap-1.5">
-            <Star className="h-4 w-4 text-amber-500" fill="currentColor" />
-            <span className="font-medium text-foreground">{rating}</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <Users className="h-4 w-4" />
-            <span>{students.toLocaleString()}</span>
-          </div>
-          <div className="flex items-center gap-1.5">
             <Clock className="h-4 w-4" />
             <span>{duration}</span>
           </div>
+          {lessons && (
+            <div className="flex items-center gap-1.5">
+              <BookOpen className="h-4 w-4" />
+              <span>{lessons} lessons</span>
+            </div>
+          )}
         </div>
         
         {/* Price & CTA */}
