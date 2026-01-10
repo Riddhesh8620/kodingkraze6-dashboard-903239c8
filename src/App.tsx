@@ -20,6 +20,8 @@ import CourseDetail from "./pages/CourseDetail";
 import CategoriesListing from "./pages/CategoriesListing";
 import CategoryCourses from "./pages/CategoryCourses";
 import SessionBooking from "./pages/SessionBooking";
+import AddCourse from "./pages/admin/AddCourse";
+import AddTopic from "./pages/admin/AddTopic";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -37,6 +39,24 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
   if (!user) {
     return <Navigate to="/" replace />;
+  }
+
+  return <>{children}</>;
+}
+
+function AdminProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-foreground/20 border-t-foreground rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!user || user.role !== 'admin') {
+    return <Navigate to="/dashboard" replace />;
   }
 
   return <>{children}</>;
@@ -113,6 +133,23 @@ const AppRoutes = () => (
         <ProtectedRoute>
           <TestResults />
         </ProtectedRoute>
+      } 
+    />
+    {/* Admin Routes */}
+    <Route 
+      path="/admin/add-course" 
+      element={
+        <AdminProtectedRoute>
+          <AddCourse />
+        </AdminProtectedRoute>
+      } 
+    />
+    <Route 
+      path="/admin/add-topic" 
+      element={
+        <AdminProtectedRoute>
+          <AddTopic />
+        </AdminProtectedRoute>
       } 
     />
     <Route 
