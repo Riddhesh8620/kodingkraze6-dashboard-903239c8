@@ -11,7 +11,7 @@ const fallbackCourses = [
     image: "https://images.unsplash.com/photo-1509228468518-180dd4864904?w=800&auto=format&fit=crop",
     price: 29,
     originalPrice: 79,
-    duration: "18h",
+    duration: "1h",
     lessons: 85,
     level: "Beginner",
     category: "Logical Reasoning",
