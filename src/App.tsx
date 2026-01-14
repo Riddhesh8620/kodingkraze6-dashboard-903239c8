@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/use-auth";
+import { CartProvider } from "@/contexts/CartContext";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import TutorAuth from "./pages/TutorAuth";
@@ -22,6 +23,9 @@ import CategoryCourses from "./pages/CategoryCourses";
 import SessionBooking from "./pages/SessionBooking";
 import AddCourse from "./pages/admin/AddCourse";
 import AddTopic from "./pages/admin/AddTopic";
+import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
+import CheckoutSuccess from "./pages/CheckoutSuccess";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -135,6 +139,31 @@ const AppRoutes = () => (
         </ProtectedRoute>
       } 
     />
+    {/* Cart & Checkout Routes */}
+    <Route 
+      path="/cart" 
+      element={
+        <ProtectedRoute>
+          <Cart />
+        </ProtectedRoute>
+      } 
+    />
+    <Route 
+      path="/checkout" 
+      element={
+        <ProtectedRoute>
+          <Checkout />
+        </ProtectedRoute>
+      } 
+    />
+    <Route 
+      path="/checkout/success" 
+      element={
+        <ProtectedRoute>
+          <CheckoutSuccess />
+        </ProtectedRoute>
+      } 
+    />
     {/* Admin Routes */}
     <Route 
       path="/admin/add-course" 
@@ -172,13 +201,15 @@ const AppRoutes = () => (
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <AppRoutes />
-        </BrowserRouter>
-      </TooltipProvider>
+      <CartProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <AppRoutes />
+          </BrowserRouter>
+        </TooltipProvider>
+      </CartProvider>
     </AuthProvider>
   </QueryClientProvider>
 );
