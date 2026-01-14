@@ -1,11 +1,40 @@
+import { useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Clock, BarChart, Play, BookOpen, Award, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Clock, BarChart, Play, BookOpen, Award, CheckCircle2, ShoppingCart, Plus, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import Header from "@/components/dashboard/Header";
+import { useCart, CartItem } from "@/contexts/CartContext";
+import { toast } from "sonner";
 
-// Mock course data
-const mockCourses = [
+// Topic interface with pricing
+interface Topic {
+  id: string;
+  title: string;
+  lessons: number;
+  duration: string;
+  price: number;
+  originalPrice?: number;
+}
+
+interface Course {
+  id: string;
+  title: string;
+  priceInPaisa: number;
+  originalPrice: number;
+  duration: string;
+  level: "Beginner" | "Intermediate" | "Advanced";
+  image: string;
+  category: string;
+  description: string;
+  lessons: number;
+  features: string[];
+  curriculum: Topic[];
+}
+
+// Mock course data with topic pricing
+const mockCourses: Course[] = [
   // Aptitude Courses
   {
     id: "1",
@@ -13,7 +42,7 @@ const mockCourses = [
     priceInPaisa: 29,
     originalPrice: 79,
     duration: "18 hours",
-    level: "Beginner" as const,
+    level: "Beginner",
     image: "https://images.unsplash.com/photo-1509228468518-180dd4864904?w=800&auto=format&fit=crop&q=60",
     category: "Logical Reasoning",
     description: "Master logical reasoning with pattern recognition, syllogisms, blood relations, coding-decoding, and critical thinking exercises for competitive exams.",
@@ -26,12 +55,12 @@ const mockCourses = [
       "Mock test series"
     ],
     curriculum: [
-      { title: "Introduction to Logical Reasoning", lessons: 8, duration: "2h 00m" },
-      { title: "Pattern Recognition & Series", lessons: 15, duration: "3h 30m" },
-      { title: "Syllogisms & Statements", lessons: 12, duration: "2h 45m" },
-      { title: "Blood Relations & Directions", lessons: 14, duration: "3h 15m" },
-      { title: "Coding-Decoding", lessons: 18, duration: "4h 00m" },
-      { title: "Practice Tests & Mock Exams", lessons: 18, duration: "2h 30m" }
+      { id: "1-1", title: "Introduction to Logical Reasoning", lessons: 8, duration: "2h 00m", price: 9, originalPrice: 15 },
+      { id: "1-2", title: "Pattern Recognition & Series", lessons: 15, duration: "3h 30m", price: 12, originalPrice: 18 },
+      { id: "1-3", title: "Syllogisms & Statements", lessons: 12, duration: "2h 45m", price: 10, originalPrice: 16 },
+      { id: "1-4", title: "Blood Relations & Directions", lessons: 14, duration: "3h 15m", price: 11, originalPrice: 17 },
+      { id: "1-5", title: "Coding-Decoding", lessons: 18, duration: "4h 00m", price: 14, originalPrice: 20 },
+      { id: "1-6", title: "Practice Tests & Mock Exams", lessons: 18, duration: "2h 30m", price: 8, originalPrice: 12 }
     ]
   },
   {
@@ -40,7 +69,7 @@ const mockCourses = [
     priceInPaisa: 35,
     originalPrice: 89,
     duration: "22 hours",
-    level: "Intermediate" as const,
+    level: "Intermediate",
     image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&auto=format&fit=crop&q=60",
     category: "Analytical Reasoning",
     description: "Develop strong analytical skills with data interpretation, puzzles, seating arrangements, and complex problem-solving techniques.",
@@ -53,12 +82,12 @@ const mockCourses = [
       "Expert problem-solving strategies"
     ],
     curriculum: [
-      { title: "Fundamentals of Analytical Thinking", lessons: 10, duration: "2h 30m" },
-      { title: "Data Interpretation", lessons: 18, duration: "4h 30m" },
-      { title: "Seating Arrangements", lessons: 16, duration: "4h 00m" },
-      { title: "Puzzles & Games", lessons: 20, duration: "5h 00m" },
-      { title: "Advanced Problem Solving", lessons: 15, duration: "3h 30m" },
-      { title: "Mock Tests", lessons: 13, duration: "2h 30m" }
+      { id: "2-1", title: "Fundamentals of Analytical Thinking", lessons: 10, duration: "2h 30m", price: 10, originalPrice: 16 },
+      { id: "2-2", title: "Data Interpretation", lessons: 18, duration: "4h 30m", price: 15, originalPrice: 22 },
+      { id: "2-3", title: "Seating Arrangements", lessons: 16, duration: "4h 00m", price: 13, originalPrice: 19 },
+      { id: "2-4", title: "Puzzles & Games", lessons: 20, duration: "5h 00m", price: 16, originalPrice: 24 },
+      { id: "2-5", title: "Advanced Problem Solving", lessons: 15, duration: "3h 30m", price: 12, originalPrice: 18 },
+      { id: "2-6", title: "Mock Tests", lessons: 13, duration: "2h 30m", price: 8, originalPrice: 12 }
     ]
   },
   {
@@ -67,7 +96,7 @@ const mockCourses = [
     priceInPaisa: 25,
     originalPrice: 69,
     duration: "16 hours",
-    level: "Beginner" as const,
+    level: "Beginner",
     image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=800&auto=format&fit=crop&q=60",
     category: "Verbal Ability",
     description: "Enhance your verbal ability with reading comprehension, vocabulary, grammar, and sentence correction for all competitive exams.",
@@ -80,11 +109,11 @@ const mockCourses = [
       "Grammar practice tests"
     ],
     curriculum: [
-      { title: "Reading Comprehension Strategies", lessons: 12, duration: "3h 00m" },
-      { title: "Vocabulary Building", lessons: 15, duration: "3h 30m" },
-      { title: "Grammar Fundamentals", lessons: 18, duration: "4h 00m" },
-      { title: "Sentence Correction", lessons: 14, duration: "3h 00m" },
-      { title: "Para Jumbles & Completion", lessons: 13, duration: "2h 30m" }
+      { id: "3-1", title: "Reading Comprehension Strategies", lessons: 12, duration: "3h 00m", price: 9, originalPrice: 14 },
+      { id: "3-2", title: "Vocabulary Building", lessons: 15, duration: "3h 30m", price: 10, originalPrice: 15 },
+      { id: "3-3", title: "Grammar Fundamentals", lessons: 18, duration: "4h 00m", price: 12, originalPrice: 18 },
+      { id: "3-4", title: "Sentence Correction", lessons: 14, duration: "3h 00m", price: 9, originalPrice: 14 },
+      { id: "3-5", title: "Para Jumbles & Completion", lessons: 13, duration: "2h 30m", price: 8, originalPrice: 12 }
     ]
   },
   {
@@ -93,7 +122,7 @@ const mockCourses = [
     priceInPaisa: 39,
     originalPrice: 99,
     duration: "28 hours",
-    level: "Beginner" as const,
+    level: "Beginner",
     image: "https://images.unsplash.com/photo-1596495578065-6e0763fa1178?w=800&auto=format&fit=crop&q=60",
     category: "Quantitative Aptitude",
     description: "Complete quantitative aptitude preparation covering arithmetic, algebra, geometry, and data interpretation for placement and competitive exams.",
@@ -106,12 +135,12 @@ const mockCourses = [
       "Calculation speed techniques"
     ],
     curriculum: [
-      { title: "Number System & HCF-LCM", lessons: 18, duration: "4h 30m" },
-      { title: "Percentages, Profit & Loss", lessons: 20, duration: "5h 00m" },
-      { title: "Ratio, Proportion & Averages", lessons: 16, duration: "4h 00m" },
-      { title: "Time, Speed & Distance", lessons: 22, duration: "5h 30m" },
-      { title: "Algebra & Geometry", lessons: 24, duration: "6h 00m" },
-      { title: "Practice Tests", lessons: 20, duration: "3h 00m" }
+      { id: "4-1", title: "Number System & HCF-LCM", lessons: 18, duration: "4h 30m", price: 12, originalPrice: 18 },
+      { id: "4-2", title: "Percentages, Profit & Loss", lessons: 20, duration: "5h 00m", price: 14, originalPrice: 20 },
+      { id: "4-3", title: "Ratio, Proportion & Averages", lessons: 16, duration: "4h 00m", price: 11, originalPrice: 16 },
+      { id: "4-4", title: "Time, Speed & Distance", lessons: 22, duration: "5h 30m", price: 15, originalPrice: 22 },
+      { id: "4-5", title: "Algebra & Geometry", lessons: 24, duration: "6h 00m", price: 16, originalPrice: 24 },
+      { id: "4-6", title: "Practice Tests", lessons: 20, duration: "3h 00m", price: 10, originalPrice: 15 }
     ]
   },
   // Engineering & IT Courses
@@ -121,7 +150,7 @@ const mockCourses = [
     priceInPaisa: 49,
     originalPrice: 129,
     duration: "42 hours",
-    level: "Intermediate" as const,
+    level: "Intermediate",
     image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&auto=format&fit=crop&q=60",
     category: "Web Development",
     description: "Master React from fundamentals to advanced patterns. Build real-world applications with hooks, context, Redux, and Next.js.",
@@ -134,12 +163,12 @@ const mockCourses = [
       "Project-based learning"
     ],
     curriculum: [
-      { title: "React Fundamentals", lessons: 20, duration: "5h 00m" },
-      { title: "Hooks & State Management", lessons: 28, duration: "7h 00m" },
-      { title: "Context API & Redux", lessons: 24, duration: "6h 00m" },
-      { title: "Next.js Basics", lessons: 22, duration: "5h 30m" },
-      { title: "Advanced Patterns", lessons: 30, duration: "8h 00m" },
-      { title: "Building Projects", lessons: 32, duration: "10h 30m" }
+      { id: "5-1", title: "React Fundamentals", lessons: 20, duration: "5h 00m", price: 15, originalPrice: 25 },
+      { id: "5-2", title: "Hooks & State Management", lessons: 28, duration: "7h 00m", price: 18, originalPrice: 28 },
+      { id: "5-3", title: "Context API & Redux", lessons: 24, duration: "6h 00m", price: 16, originalPrice: 26 },
+      { id: "5-4", title: "Next.js Basics", lessons: 22, duration: "5h 30m", price: 15, originalPrice: 24 },
+      { id: "5-5", title: "Advanced Patterns", lessons: 30, duration: "8h 00m", price: 20, originalPrice: 32 },
+      { id: "5-6", title: "Building Projects", lessons: 32, duration: "10h 30m", price: 22, originalPrice: 35 }
     ]
   },
   {
@@ -148,7 +177,7 @@ const mockCourses = [
     priceInPaisa: 45,
     originalPrice: 119,
     duration: "36 hours",
-    level: "Intermediate" as const,
+    level: "Intermediate",
     image: "https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=800&auto=format&fit=crop&q=60",
     category: "DSA",
     description: "Comprehensive DSA course covering arrays, linked lists, trees, graphs, dynamic programming, and problem-solving techniques for interviews.",
@@ -161,12 +190,12 @@ const mockCourses = [
       "Interview preparation guide"
     ],
     curriculum: [
-      { title: "Arrays & Strings", lessons: 25, duration: "6h 00m" },
-      { title: "Linked Lists & Stacks", lessons: 22, duration: "5h 30m" },
-      { title: "Trees & Binary Search Trees", lessons: 28, duration: "7h 00m" },
-      { title: "Graphs & BFS/DFS", lessons: 24, duration: "6h 00m" },
-      { title: "Dynamic Programming", lessons: 26, duration: "7h 00m" },
-      { title: "Interview Problems", lessons: 20, duration: "4h 30m" }
+      { id: "6-1", title: "Arrays & Strings", lessons: 25, duration: "6h 00m", price: 14, originalPrice: 22 },
+      { id: "6-2", title: "Linked Lists & Stacks", lessons: 22, duration: "5h 30m", price: 13, originalPrice: 20 },
+      { id: "6-3", title: "Trees & Binary Search Trees", lessons: 28, duration: "7h 00m", price: 16, originalPrice: 25 },
+      { id: "6-4", title: "Graphs & BFS/DFS", lessons: 24, duration: "6h 00m", price: 15, originalPrice: 24 },
+      { id: "6-5", title: "Dynamic Programming", lessons: 26, duration: "7h 00m", price: 17, originalPrice: 26 },
+      { id: "6-6", title: "Interview Problems", lessons: 20, duration: "4h 30m", price: 12, originalPrice: 18 }
     ]
   },
   {
@@ -175,7 +204,7 @@ const mockCourses = [
     priceInPaisa: 55,
     originalPrice: 139,
     duration: "38 hours",
-    level: "Intermediate" as const,
+    level: "Intermediate",
     image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&auto=format&fit=crop&q=60",
     category: "Data Science",
     description: "Learn Python for data science including NumPy, Pandas, Matplotlib, Scikit-learn, and machine learning fundamentals.",
@@ -188,12 +217,12 @@ const mockCourses = [
       "Real datasets for practice"
     ],
     curriculum: [
-      { title: "Python Basics & NumPy", lessons: 20, duration: "5h 00m" },
-      { title: "Pandas & Data Manipulation", lessons: 25, duration: "6h 30m" },
-      { title: "Data Visualization", lessons: 18, duration: "4h 30m" },
-      { title: "Machine Learning Basics", lessons: 28, duration: "7h 30m" },
-      { title: "Supervised Learning", lessons: 22, duration: "6h 00m" },
-      { title: "Projects & Case Studies", lessons: 17, duration: "8h 30m" }
+      { id: "7-1", title: "Python Basics & NumPy", lessons: 20, duration: "5h 00m", price: 15, originalPrice: 24 },
+      { id: "7-2", title: "Pandas & Data Manipulation", lessons: 25, duration: "6h 30m", price: 18, originalPrice: 28 },
+      { id: "7-3", title: "Data Visualization", lessons: 18, duration: "4h 30m", price: 14, originalPrice: 22 },
+      { id: "7-4", title: "Machine Learning Basics", lessons: 28, duration: "7h 30m", price: 20, originalPrice: 32 },
+      { id: "7-5", title: "Supervised Learning", lessons: 22, duration: "6h 00m", price: 17, originalPrice: 26 },
+      { id: "7-6", title: "Projects & Case Studies", lessons: 17, duration: "8h 30m", price: 16, originalPrice: 25 }
     ]
   },
   {
@@ -202,7 +231,7 @@ const mockCourses = [
     priceInPaisa: 54,
     originalPrice: 139,
     duration: "28 hours",
-    level: "Beginner" as const,
+    level: "Beginner",
     image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&auto=format&fit=crop&q=60",
     category: "Cloud Computing",
     description: "Prepare for AWS Cloud Practitioner certification with comprehensive coverage of AWS services, architecture, and best practices.",
@@ -215,12 +244,12 @@ const mockCourses = [
       "Hands-on labs"
     ],
     curriculum: [
-      { title: "Cloud Concepts", lessons: 15, duration: "4h 00m" },
-      { title: "AWS Core Services", lessons: 25, duration: "7h 00m" },
-      { title: "Security & Compliance", lessons: 18, duration: "5h 00m" },
-      { title: "Billing & Pricing", lessons: 12, duration: "3h 00m" },
-      { title: "Architecture Best Practices", lessons: 16, duration: "4h 30m" },
-      { title: "Practice Exams", lessons: 12, duration: "4h 30m" }
+      { id: "8-1", title: "Cloud Concepts", lessons: 15, duration: "4h 00m", price: 14, originalPrice: 22 },
+      { id: "8-2", title: "AWS Core Services", lessons: 25, duration: "7h 00m", price: 18, originalPrice: 28 },
+      { id: "8-3", title: "Security & Compliance", lessons: 18, duration: "5h 00m", price: 15, originalPrice: 24 },
+      { id: "8-4", title: "Billing & Pricing", lessons: 12, duration: "3h 00m", price: 10, originalPrice: 16 },
+      { id: "8-5", title: "Architecture Best Practices", lessons: 16, duration: "4h 30m", price: 14, originalPrice: 22 },
+      { id: "8-6", title: "Practice Exams", lessons: 12, duration: "4h 30m", price: 12, originalPrice: 18 }
     ]
   },
   {
@@ -229,7 +258,7 @@ const mockCourses = [
     priceInPaisa: 59,
     originalPrice: 149,
     duration: "32 hours",
-    level: "Intermediate" as const,
+    level: "Intermediate",
     image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&auto=format&fit=crop&q=60",
     category: "Cybersecurity",
     description: "Learn ethical hacking, penetration testing, network security, and cybersecurity fundamentals for a career in security.",
@@ -242,11 +271,11 @@ const mockCourses = [
       "Real-world hacking scenarios"
     ],
     curriculum: [
-      { title: "Cybersecurity Fundamentals", lessons: 16, duration: "4h 00m" },
-      { title: "Network Security", lessons: 22, duration: "6h 00m" },
-      { title: "Ethical Hacking Techniques", lessons: 28, duration: "8h 00m" },
-      { title: "Web Application Security", lessons: 20, duration: "5h 30m" },
-      { title: "Penetration Testing", lessons: 24, duration: "8h 30m" }
+      { id: "9-1", title: "Cybersecurity Fundamentals", lessons: 16, duration: "4h 00m", price: 16, originalPrice: 26 },
+      { id: "9-2", title: "Network Security", lessons: 22, duration: "6h 00m", price: 20, originalPrice: 32 },
+      { id: "9-3", title: "Ethical Hacking Techniques", lessons: 28, duration: "8h 00m", price: 24, originalPrice: 38 },
+      { id: "9-4", title: "Web Application Security", lessons: 20, duration: "5h 30m", price: 18, originalPrice: 28 },
+      { id: "9-5", title: "Penetration Testing", lessons: 24, duration: "8h 30m", price: 22, originalPrice: 35 }
     ]
   },
   {
@@ -255,7 +284,7 @@ const mockCourses = [
     priceInPaisa: 35,
     originalPrice: 89,
     duration: "24 hours",
-    level: "Beginner" as const,
+    level: "Beginner",
     image: "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=800&auto=format&fit=crop&q=60",
     category: "Database",
     description: "Master database concepts with SQL and NoSQL databases including MySQL, PostgreSQL, MongoDB, and database design principles.",
@@ -268,11 +297,11 @@ const mockCourses = [
       "Query optimization techniques"
     ],
     curriculum: [
-      { title: "Database Fundamentals", lessons: 12, duration: "3h 00m" },
-      { title: "SQL Basics & Advanced", lessons: 22, duration: "6h 00m" },
-      { title: "Database Design", lessons: 16, duration: "4h 00m" },
-      { title: "MongoDB & NoSQL", lessons: 20, duration: "5h 30m" },
-      { title: "Performance & Optimization", lessons: 18, duration: "5h 30m" }
+      { id: "10-1", title: "Database Fundamentals", lessons: 12, duration: "3h 00m", price: 10, originalPrice: 16 },
+      { id: "10-2", title: "SQL Basics & Advanced", lessons: 22, duration: "6h 00m", price: 14, originalPrice: 22 },
+      { id: "10-3", title: "Database Design", lessons: 16, duration: "4h 00m", price: 12, originalPrice: 18 },
+      { id: "10-4", title: "MongoDB & NoSQL", lessons: 20, duration: "5h 30m", price: 14, originalPrice: 22 },
+      { id: "10-5", title: "Performance & Optimization", lessons: 18, duration: "5h 30m", price: 13, originalPrice: 20 }
     ]
   },
   {
@@ -281,7 +310,7 @@ const mockCourses = [
     priceInPaisa: 49,
     originalPrice: 129,
     duration: "35 hours",
-    level: "Beginner" as const,
+    level: "Beginner",
     image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&auto=format&fit=crop&q=60",
     category: "Mobile Apps",
     description: "Build cross-platform mobile apps with Flutter and Dart. Create beautiful iOS and Android apps from a single codebase.",
@@ -294,12 +323,12 @@ const mockCourses = [
       "App publishing guide"
     ],
     curriculum: [
-      { title: "Dart Programming", lessons: 18, duration: "4h 30m" },
-      { title: "Flutter Basics", lessons: 24, duration: "6h 00m" },
-      { title: "UI Components & Layouts", lessons: 26, duration: "7h 00m" },
-      { title: "State Management", lessons: 22, duration: "5h 30m" },
-      { title: "APIs & Firebase", lessons: 20, duration: "5h 30m" },
-      { title: "Publishing Apps", lessons: 15, duration: "6h 30m" }
+      { id: "11-1", title: "Dart Programming", lessons: 18, duration: "4h 30m", price: 14, originalPrice: 22 },
+      { id: "11-2", title: "Flutter Basics", lessons: 24, duration: "6h 00m", price: 16, originalPrice: 26 },
+      { id: "11-3", title: "UI Components & Layouts", lessons: 26, duration: "7h 00m", price: 18, originalPrice: 28 },
+      { id: "11-4", title: "State Management", lessons: 22, duration: "5h 30m", price: 15, originalPrice: 24 },
+      { id: "11-5", title: "APIs & Firebase", lessons: 20, duration: "5h 30m", price: 15, originalPrice: 24 },
+      { id: "11-6", title: "Publishing Apps", lessons: 15, duration: "6h 30m", price: 14, originalPrice: 22 }
     ]
   },
   {
@@ -308,7 +337,7 @@ const mockCourses = [
     priceInPaisa: 65,
     originalPrice: 169,
     duration: "30 hours",
-    level: "Advanced" as const,
+    level: "Advanced",
     image: "https://images.unsplash.com/photo-1667372393119-3d4c48d07fc9?w=800&auto=format&fit=crop&q=60",
     category: "DevOps",
     description: "Master DevOps practices with Docker, Kubernetes, Jenkins, GitHub Actions, and automated deployment pipelines.",
@@ -321,11 +350,11 @@ const mockCourses = [
       "Real-world DevOps scenarios"
     ],
     curriculum: [
-      { title: "DevOps Fundamentals", lessons: 14, duration: "3h 30m" },
-      { title: "Docker & Containerization", lessons: 22, duration: "6h 00m" },
-      { title: "Kubernetes", lessons: 24, duration: "7h 00m" },
-      { title: "CI/CD with Jenkins", lessons: 20, duration: "5h 30m" },
-      { title: "GitHub Actions & Automation", lessons: 25, duration: "8h 00m" }
+      { id: "12-1", title: "DevOps Fundamentals", lessons: 14, duration: "3h 30m", price: 16, originalPrice: 26 },
+      { id: "12-2", title: "Docker & Containerization", lessons: 22, duration: "6h 00m", price: 22, originalPrice: 35 },
+      { id: "12-3", title: "Kubernetes", lessons: 24, duration: "7h 00m", price: 24, originalPrice: 38 },
+      { id: "12-4", title: "CI/CD with Jenkins", lessons: 20, duration: "5h 30m", price: 20, originalPrice: 32 },
+      { id: "12-5", title: "GitHub Actions & Automation", lessons: 25, duration: "8h 00m", price: 22, originalPrice: 35 }
     ]
   }
 ];
@@ -333,11 +362,13 @@ const mockCourses = [
 const CourseDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { addToCart, isInCart } = useCart();
+  const [selectedTopics, setSelectedTopics] = useState<Set<string>>(new Set());
   
   const course = mockCourses.find(c => c.id === id) || mockCourses[0];
   
-  const formatPrice = (priceInPaisa: number) => {
-    return `₹${(priceInPaisa).toLocaleString('en-IN')}`;
+  const formatPrice = (price: number) => {
+    return `₹${price.toLocaleString('en-IN')}`;
   };
 
   const levelColors = {
@@ -345,6 +376,87 @@ const CourseDetail = () => {
     Intermediate: "hsl(199, 89%, 48%)",
     Advanced: "hsl(340, 82%, 52%)"
   };
+
+  const fullCourseInCart = isInCart(`course-${course.id}`);
+  
+  const handleToggleTopic = (topicId: string) => {
+    const newSelected = new Set(selectedTopics);
+    if (newSelected.has(topicId)) {
+      newSelected.delete(topicId);
+    } else {
+      newSelected.add(topicId);
+    }
+    setSelectedTopics(newSelected);
+  };
+
+  const handleAddFullCourse = () => {
+    const cartItem: CartItem = {
+      id: `course-${course.id}`,
+      type: "course",
+      courseId: course.id,
+      courseTitle: course.title,
+      price: course.priceInPaisa,
+      originalPrice: course.originalPrice,
+      image: course.image,
+    };
+    addToCart(cartItem);
+  };
+
+  const handleAddTopicToCart = (topic: Topic) => {
+    if (fullCourseInCart) {
+      toast.info("You already have the full course in your cart");
+      return;
+    }
+    
+    const cartItem: CartItem = {
+      id: `topic-${topic.id}`,
+      type: "topic",
+      courseId: course.id,
+      courseTitle: course.title,
+      topicId: topic.id,
+      topicTitle: topic.title,
+      price: topic.price,
+      originalPrice: topic.originalPrice,
+      image: course.image,
+    };
+    addToCart(cartItem);
+  };
+
+  const handleAddSelectedToCart = () => {
+    if (selectedTopics.size === 0) {
+      toast.error("Please select at least one topic");
+      return;
+    }
+
+    if (fullCourseInCart) {
+      toast.info("You already have the full course in your cart");
+      return;
+    }
+
+    selectedTopics.forEach(topicId => {
+      const topic = course.curriculum.find(t => t.id === topicId);
+      if (topic && !isInCart(`topic-${topic.id}`)) {
+        const cartItem: CartItem = {
+          id: `topic-${topic.id}`,
+          type: "topic",
+          courseId: course.id,
+          courseTitle: course.title,
+          topicId: topic.id,
+          topicTitle: topic.title,
+          price: topic.price,
+          originalPrice: topic.originalPrice,
+          image: course.image,
+        };
+        addToCart(cartItem);
+      }
+    });
+    setSelectedTopics(new Set());
+  };
+
+  const selectedTopicsPrice = Array.from(selectedTopics).reduce((sum, topicId) => {
+    const topic = course.curriculum.find(t => t.id === topicId);
+    return sum + (topic?.price || 0);
+  }, 0);
 
   return (
     <div className="min-h-screen bg-background">
@@ -406,31 +518,97 @@ const CourseDetail = () => {
               </div>
             </div>
 
-            {/* Curriculum */}
+            {/* Curriculum with Topic Pricing */}
             <div>
-              <h2 className="text-2xl font-bold font-display mb-6">Course Curriculum</h2>
-              <div className="space-y-3">
-                {course.curriculum?.map((section, index) => (
-                  <div 
-                    key={index}
-                    className="p-4 rounded-xl border border-border bg-card hover:bg-muted/50 transition-colors"
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold font-display">Course Curriculum</h2>
+                {selectedTopics.size > 0 && (
+                  <Button 
+                    onClick={handleAddSelectedToCart}
+                    className="btn-primary"
+                    disabled={fullCourseInCart}
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center text-sm font-medium">
+                    <ShoppingCart className="mr-2 h-4 w-4" />
+                    Add {selectedTopics.size} Topics ({formatPrice(selectedTopicsPrice)})
+                  </Button>
+                )}
+              </div>
+              
+              <p className="text-sm text-muted-foreground mb-4">
+                Select individual topics or purchase the complete course for best value
+              </p>
+
+              <div className="space-y-3">
+                {course.curriculum?.map((topic, index) => {
+                  const topicInCart = isInCart(`topic-${topic.id}`);
+                  const isSelected = selectedTopics.has(topic.id);
+                  const isDisabled = fullCourseInCart || topicInCart;
+                  
+                  return (
+                    <div 
+                      key={topic.id}
+                      className={`p-4 rounded-xl border transition-colors ${
+                        isSelected 
+                          ? "border-primary bg-primary/5" 
+                          : "border-border bg-card hover:bg-muted/50"
+                      } ${isDisabled ? "opacity-60" : ""}`}
+                    >
+                      <div className="flex items-center gap-4">
+                        {/* Checkbox */}
+                        <Checkbox 
+                          id={topic.id}
+                          checked={isSelected}
+                          onCheckedChange={() => handleToggleTopic(topic.id)}
+                          disabled={isDisabled}
+                        />
+                        
+                        {/* Topic Number */}
+                        <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center text-sm font-medium shrink-0">
                           {index + 1}
                         </div>
-                        <div>
-                          <p className="font-medium">{section.title}</p>
+                        
+                        {/* Topic Info */}
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium">{topic.title}</p>
                           <p className="text-sm text-muted-foreground">
-                            {section.lessons} lessons • {section.duration}
+                            {topic.lessons} lessons • {topic.duration}
                           </p>
                         </div>
+                        
+                        {/* Price & Add Button */}
+                        <div className="flex items-center gap-3 shrink-0">
+                          <div className="text-right">
+                            <p className="font-bold">{formatPrice(topic.price)}</p>
+                            {topic.originalPrice && (
+                              <p className="text-xs text-muted-foreground line-through">
+                                {formatPrice(topic.originalPrice)}
+                              </p>
+                            )}
+                          </div>
+                          <Button
+                            size="sm"
+                            variant={topicInCart ? "secondary" : "outline"}
+                            onClick={() => handleAddTopicToCart(topic)}
+                            disabled={isDisabled}
+                            className="w-24"
+                          >
+                            {topicInCart ? (
+                              <>
+                                <Check className="mr-1 h-3 w-3" />
+                                Added
+                              </>
+                            ) : (
+                              <>
+                                <Plus className="mr-1 h-3 w-3" />
+                                Add
+                              </>
+                            )}
+                          </Button>
+                        </div>
                       </div>
-                      <BarChart className="h-5 w-5 text-muted-foreground" />
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -440,6 +618,7 @@ const CourseDetail = () => {
             <div className="sticky top-8 p-6 rounded-2xl border border-border bg-card shadow-elevated">
               {/* Price */}
               <div className="mb-6">
+                <p className="text-sm text-muted-foreground mb-1">Full Course Price</p>
                 <div className="flex items-baseline gap-3">
                   <span className="text-3xl font-bold">{formatPrice(course.priceInPaisa)}</span>
                   {course.originalPrice && (
@@ -457,11 +636,27 @@ const CourseDetail = () => {
 
               {/* CTA Buttons */}
               <div className="space-y-3 mb-6">
-                <Button className="w-full btn-accent text-lg py-6">
-                  Enroll Now
+                <Button 
+                  className="w-full btn-accent text-lg py-6"
+                  onClick={handleAddFullCourse}
+                  disabled={fullCourseInCart}
+                >
+                  {fullCourseInCart ? (
+                    <>
+                      <Check className="mr-2 h-5 w-5" />
+                      Added to Cart
+                    </>
+                  ) : (
+                    "Enroll - Full Course"
+                  )}
                 </Button>
-                <Button variant="outline" className="w-full py-6">
-                  Add to Cart
+                <Button 
+                  variant="outline" 
+                  className="w-full py-6"
+                  onClick={() => navigate("/cart")}
+                >
+                  <ShoppingCart className="mr-2 h-4 w-4" />
+                  View Cart
                 </Button>
               </div>
 

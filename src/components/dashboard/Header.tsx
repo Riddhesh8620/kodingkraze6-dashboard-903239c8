@@ -1,7 +1,9 @@
-import { Search, Bell, User, Menu, Zap, LogOut, Target, Video, PlusCircle, BookPlus, FolderPlus, Settings } from "lucide-react";
+import { Search, Bell, User, Menu, Zap, LogOut, Target, Video, PlusCircle, BookPlus, FolderPlus, Settings, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/use-auth";
+import { useCart } from "@/contexts/CartContext";
 import { useNavigate, Link } from "react-router-dom";
 import {
   Sheet,
@@ -20,6 +22,7 @@ import {
 
 const Header = () => {
   const { user, signOut } = useAuth();
+  const { itemCount } = useCart();
   const navigate = useNavigate();
   
   // Check if user is admin
@@ -103,6 +106,23 @@ const Header = () => {
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" className="md:hidden rounded-full">
             <Search className="h-5 w-5" />
+          </Button>
+
+          {/* Cart Button */}
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="rounded-full relative"
+            onClick={() => navigate("/cart")}
+          >
+            <ShoppingCart className="h-5 w-5" />
+            {itemCount > 0 && (
+              <Badge 
+                className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-primary text-primary-foreground"
+              >
+                {itemCount}
+              </Badge>
+            )}
           </Button>
 
           {/* User Dropdown */}
