@@ -23,6 +23,8 @@ import CategoryCourses from "./pages/CategoryCourses";
 import SessionBooking from "./pages/SessionBooking";
 import AddCourse from "./pages/admin/AddCourse";
 import AddTopic from "./pages/admin/AddTopic";
+import AddLead from "./pages/admin/AddLead";
+import LeadsDashboard from "./pages/admin/LeadsDashboard";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import CheckoutSuccess from "./pages/CheckoutSuccess";
@@ -178,6 +180,22 @@ const AppRoutes = () => (
       element={
         <AdminProtectedRoute>
           <AddTopic />
+        </AdminProtectedRoute>
+      } 
+    />
+    <Route 
+      path="/admin/leads" 
+      element={
+        <AdminProtectedRoute>
+          <LeadsDashboard />
+        </AdminProtectedRoute>
+      } 
+    />
+    <Route 
+      path="/admin/leads/add" 
+      element={
+        <AdminProtectedRoute>
+          <AddLead />
         </AdminProtectedRoute>
       } 
     />
