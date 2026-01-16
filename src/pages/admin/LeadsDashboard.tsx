@@ -117,7 +117,7 @@ const LeadsDashboard = () => {
       <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link
-            to="/admin"
+            to="/dashboard"
             className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
