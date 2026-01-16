@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { toast } from "sonner";
 
 export interface CartItem {
@@ -66,12 +66,12 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const subtotal = items.reduce((sum, item) => sum + item.price, 0);
   const originalTotalPrice = items.reduce((sum, item) => sum + (item.originalPrice || item.price), 0);
-  
+
   // Bundle discount: 10% off when 3+ items
-  const bundleDiscount = items.length >= BUNDLE_DISCOUNT_THRESHOLD 
-    ? Math.round(subtotal * BUNDLE_DISCOUNT_PERCENT / 100) 
+  const bundleDiscount = items.length >= BUNDLE_DISCOUNT_THRESHOLD
+    ? Math.round(subtotal * BUNDLE_DISCOUNT_PERCENT / 100)
     : 0;
-  
+
   const totalPrice = subtotal - bundleDiscount;
   const itemCount = items.length;
 

@@ -10,7 +10,7 @@ import { cartApi } from "@/api/cart";
 import { toast } from "sonner";
 
 // Import QR code image - you'll upload this
-import qrCodeImage from "@/assets/payment-qr.png";
+import qrCodeImage from "@/payment-qr.png";
 
 const Checkout = () => {
   const navigate = useNavigate();
