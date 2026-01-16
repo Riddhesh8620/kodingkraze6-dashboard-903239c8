@@ -1,4 +1,4 @@
-import { Search, Bell, User, Menu, Zap, LogOut, Target, Video, PlusCircle, BookPlus, FolderPlus, Settings, ShoppingCart } from "lucide-react";
+import { Search, Bell, User, Menu, Zap, LogOut, Target, Video, PlusCircle, BookPlus, FolderPlus, Settings, ShoppingCart, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -68,6 +68,13 @@ const Header = () => {
         >
           <FolderPlus className="h-5 w-5" />
           Add Topics / Questions
+        </Link>
+        <Link 
+          to="/admin/leads" 
+          className="flex items-center gap-3 text-lg py-2 text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <Users className="h-5 w-5" />
+          Leads Dashboard
         </Link>
       </div>
     </>
@@ -147,6 +154,9 @@ const Header = () => {
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate("/admin/add-topic")} className="cursor-pointer">
                     <FolderPlus className="mr-2 h-4 w-4" /> Add Topics / Questions
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate("/admin/leads")} className="cursor-pointer">
+                    <Users className="mr-2 h-4 w-4" /> Leads Dashboard
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                 </>
