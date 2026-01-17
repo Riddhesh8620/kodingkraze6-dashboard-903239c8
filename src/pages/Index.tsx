@@ -1,12 +1,17 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Header from "@/components/dashboard/Header";
 import WelcomeHero from "@/components/dashboard/WelcomeHero";
 import StatsBar from "@/components/dashboard/StatsBar";
 import Categories from "@/components/dashboard/Categories";
 import CourseBrochure from "@/components/dashboard/CourseBrochure";
 import { ArrowRight, Zap } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
+import { Button } from "@/components/ui/button";
 
 const Index = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -55,13 +60,28 @@ const Index = () => {
               Ready to start your coding journey?
             </h2>
             <p className="text-lg text-background/70 mb-8">
-              Join thousands of learners who have transformed their careers with KodingKRaze6. 
+              Join thousands of learners who have transformed their careers with KodingKraze6. 
               No commitments, just results.
             </p>
-            <button className="inline-flex items-center gap-2 bg-background text-foreground px-8 py-4 rounded-full font-medium hover:scale-105 transition-transform">
-              Get Started Free
-              <ArrowRight className="h-5 w-5" />
-            </button>
+            {!user ? (
+              <Button 
+                size="lg"
+                className="inline-flex items-center gap-2 bg-background text-foreground px-8 py-4 rounded-full font-medium hover:scale-105 transition-transform hover:bg-background/90"
+                onClick={() => navigate("/auth?mode=signup")}
+              >
+                Get Started Free
+                <ArrowRight className="h-5 w-5" />
+              </Button>
+            ) : (
+              <Button 
+                size="lg"
+                className="inline-flex items-center gap-2 bg-background text-foreground px-8 py-4 rounded-full font-medium hover:scale-105 transition-transform hover:bg-background/90"
+                onClick={() => navigate("/categories")}
+              >
+                Browse Courses
+                <ArrowRight className="h-5 w-5" />
+              </Button>
+            )}
           </div>
         </section>
         

@@ -1,4 +1,4 @@
-import { Search, Bell, User, Menu, Zap, LogOut, Target, Video, PlusCircle, BookPlus, FolderPlus, Settings, ShoppingCart, Users } from "lucide-react";
+import { Search, User, Menu, Zap, LogOut, Target, Video, BookPlus, FolderPlus, ShoppingCart, Users, UserPlus, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -132,40 +132,61 @@ const Header = () => {
             )}
           </Button>
 
-          {/* User Dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-full">
-                <User className="h-5 w-5" />
+          {/* Auth Buttons for non-authenticated users */}
+          {!user ? (
+            <div className="hidden sm:flex items-center gap-2">
+              <Button 
+                variant="ghost" 
+                className="rounded-full"
+                onClick={() => navigate("/auth?mode=signin")}
+              >
+                <LogIn className="mr-2 h-4 w-4" />
+                Sign In
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <div className="px-3 py-2 text-sm">
-                <p className="font-medium truncate">{user?.email}</p>
+              <Button 
+                className="rounded-full btn-primary"
+                onClick={() => navigate("/auth?mode=signup")}
+              >
+                <UserPlus className="mr-2 h-4 w-4" />
+                Sign Up
+              </Button>
+            </div>
+          ) : (
+            /* User Dropdown for authenticated users */
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="rounded-full">
+                  <User className="h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <div className="px-3 py-2 text-sm">
+                  <p className="font-medium truncate">{user?.email}</p>
+                  {isAdmin && (
+                    <p className="text-xs text-primary font-medium mt-1">Administrator</p>
+                  )}
+                </div>
+                <DropdownMenuSeparator />
                 {isAdmin && (
-                  <p className="text-xs text-primary font-medium mt-1">Administrator</p>
+                  <>
+                    <DropdownMenuItem onClick={() => navigate("/admin/add-course")} className="cursor-pointer">
+                      <BookPlus className="mr-2 h-4 w-4" /> Add Course
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate("/admin/add-topic")} className="cursor-pointer">
+                      <FolderPlus className="mr-2 h-4 w-4" /> Add Topics / Questions
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate("/admin/leads")} className="cursor-pointer">
+                      <Users className="mr-2 h-4 w-4" /> Leads Dashboard
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                  </>
                 )}
-              </div>
-              <DropdownMenuSeparator />
-              {isAdmin && (
-                <>
-                  <DropdownMenuItem onClick={() => navigate("/admin/add-course")} className="cursor-pointer">
-                    <BookPlus className="mr-2 h-4 w-4" /> Add Course
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => navigate("/admin/add-topic")} className="cursor-pointer">
-                    <FolderPlus className="mr-2 h-4 w-4" /> Add Topics / Questions
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => navigate("/admin/leads")} className="cursor-pointer">
-                    <Users className="mr-2 h-4 w-4" /> Leads Dashboard
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                </>
-              )}
-              <DropdownMenuItem onClick={signOut} className="text-destructive cursor-pointer">
-                <LogOut className="mr-2 h-4 w-4" /> Sign out
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                <DropdownMenuItem onClick={signOut} className="text-destructive cursor-pointer">
+                  <LogOut className="mr-2 h-4 w-4" /> Sign out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
 
           {/* MOBILE MENU (SHEET) */}
           <Sheet>
@@ -185,12 +206,42 @@ const Header = () => {
                 {/* We reuse our NavLinks but style them for a vertical stack */}
                 <NavLinks className="text-lg py-2 border-b border-border/50" />
                 
-                {/* Admin Links */}
-                {isAdmin && <AdminLinks />}
-                
-                {/* <Button className="w-full mt-4" onClick={() => navigate('/sessions/book')}>
-                  Book a Session
-                </Button> */}
+                {/* Auth Links for mobile */}
+                {!user ? (
+                  <div className="pt-4 border-t border-border">
+                    <Button 
+                      className="w-full mb-3"
+                      onClick={() => navigate("/auth?mode=signin")}
+                    >
+                      <LogIn className="mr-2 h-4 w-4" />
+                      Sign In
+                    </Button>
+                    <Button 
+                      variant="outline"
+                      className="w-full"
+                      onClick={() => navigate("/auth?mode=signup")}
+                    >
+                      <UserPlus className="mr-2 h-4 w-4" />
+                      Sign Up
+                    </Button>
+                  </div>
+                ) : (
+                  <>
+                    {/* Admin Links */}
+                    {isAdmin && <AdminLinks />}
+                    
+                    <div className="pt-4 border-t border-border">
+                      <Button 
+                        variant="destructive" 
+                        className="w-full"
+                        onClick={signOut}
+                      >
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Sign Out
+                      </Button>
+                    </div>
+                  </>
+                )}
               </div>
             </SheetContent>
           </Sheet>

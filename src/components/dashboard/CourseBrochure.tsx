@@ -204,29 +204,23 @@ const CourseBrochure = () => {
 
   return (
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {true ? (
-          Array.from({ length: 6 }).map((_, index) => (
-            <CourseSkeleton key={index} />
-          ))
-        ) : (
-          displayCourses.map((course, index) => (
-            <CourseCard
-              key={course.id}
-              id={course.id}
-              title={course.title}
-              image={course.image}
-              price={course.price}
-              originalPrice={course.originalPrice}
-              duration={course.duration}
-              lessons={(course as any).lessons}
-              level={(course as any).level}
-              category={course.category}
-              categoryColor={course.categoryColor}
-              featured={(course as any).featured}
-              delay={index * 0.1}
-            />
-          ))
-        )}
+      {displayCourses.map((course, index) => (
+        <CourseCard
+          key={course.id}
+          id={course.id}
+          title={course.title}
+          image={course.image}
+          discountedPrice={course.price}
+          originalPrice={course.originalPrice}
+          duration={course.duration}
+          lessons={course.lessons}
+          level={course.level}
+          category={course.category}
+          categoryColor={course.categoryColor}
+          featured={course.featured}
+          delay={index * 0.1}
+        />
+      ))}
     </div>
   );
 };

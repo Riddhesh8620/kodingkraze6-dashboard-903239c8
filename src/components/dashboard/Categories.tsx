@@ -33,24 +33,16 @@ const Categories = () => {
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-      {true ? (
-        // Show skeletons while loading
-        Array.from({ length: 6 }).map((_, index) => (
-          <CategorySkeleton key={index} />
-        ))
-      ) : (
-        // Map through data (API or Fallback)
-        displayCategories.map((category, index) => (
-          <CategoryCard
-            key={category.id}
-            icon={iconMap[category.icon] || Code2}
-            title={category.name}
-            courseCount={category.courseCount}
-            color={category.color}
-            delay={index * 0.1}
-          />
-        ))
-      )}
+      {displayCategories.map((category, index) => (
+        <CategoryCard
+          key={category.id}
+          icon={iconMap[category.icon] || Code2}
+          title={category.name}
+          courseCount={category.courseCount}
+          color={category.color}
+          delay={index * 0.1}
+        />
+      ))}
     </div>
   );
 };
