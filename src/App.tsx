@@ -89,24 +89,18 @@ function TutorProtectedRoute({ children }: { children: React.ReactNode }) {
 
 const AppRoutes = () => (
   <Routes>
-    {/* Public routes */}
+    {/* All public routes - entire site is browsable without auth */}
     <Route path="/" element={<Landing />} />
     <Route path="/auth" element={<Auth />} />
     <Route path="/auth/tutor" element={<TutorAuth />} />
+    <Route path="/dashboard" element={<Index />} />
     <Route path="/categories" element={<CategoriesListing />} />
     <Route path="/categories/:categoryId" element={<CategoryCourses />} />
     <Route path="/courses/:id" element={<CourseDetail />} />
     <Route path="/interview" element={<InterviewReadyLanding />} />
+    <Route path="/cart" element={<Cart />} />
     
-    {/* Protected user routes */}
-    <Route 
-      path="/dashboard" 
-      element={
-        <ProtectedRoute>
-          <Index />
-        </ProtectedRoute>
-      } 
-    />
+    {/* Protected routes - only actions that require auth */}
     <Route 
       path="/sessions/book" 
       element={
@@ -115,7 +109,6 @@ const AppRoutes = () => (
         </ProtectedRoute>
       } 
     />
-    <Route path="/interview" element={<InterviewReadyLanding />} />
     <Route 
       path="/interview/preferences" 
       element={
@@ -140,15 +133,6 @@ const AppRoutes = () => (
         </ProtectedRoute>
       } 
     />
-    {/* Cart & Checkout Routes */}
-    <Route 
-      path="/cart" 
-      element={
-        <ProtectedRoute>
-          <Cart />
-        </ProtectedRoute>
-      } 
-    />
     <Route 
       path="/checkout" 
       element={
@@ -165,6 +149,7 @@ const AppRoutes = () => (
         </ProtectedRoute>
       } 
     />
+    
     {/* Admin Routes */}
     <Route 
       path="/admin/add-course" 
@@ -198,6 +183,8 @@ const AppRoutes = () => (
         </AdminProtectedRoute>
       } 
     />
+    
+    {/* Tutor Routes */}
     <Route 
       path="/tutor" 
       element={
@@ -211,6 +198,7 @@ const AppRoutes = () => (
       <Route path="analytics" element={<TutorAnalytics />} />
       <Route path="earnings" element={<TutorEarnings />} />
     </Route>
+    
     <Route path="*" element={<NotFound />} />
   </Routes>
 );
