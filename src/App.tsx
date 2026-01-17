@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/use-auth";
 import { CartProvider } from "@/contexts/CartContext";
-import Landing from "./pages/Landing";
+
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import TutorAuth from "./pages/TutorAuth";
@@ -90,7 +90,7 @@ function TutorProtectedRoute({ children }: { children: React.ReactNode }) {
 const AppRoutes = () => (
   <Routes>
     {/* All public routes - entire site is browsable without auth */}
-    <Route path="/" element={<Landing />} />
+    <Route path="/" element={<Index />} />
     <Route path="/auth" element={<Auth />} />
     <Route path="/auth/tutor" element={<TutorAuth />} />
     <Route path="/dashboard" element={<Index />} />
