@@ -4,10 +4,15 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 
-// /// https://vitejs.prod/config/
+// https://vitejs.prod/config/
 // export default defineConfig({
 //   plugins: [react()],
 //   base: "/kodingkraze6-dashboard-903239c8/",
+//   resolve: {
+//     alias: {
+//       "@": path.resolve(__dirname, "./src"),
+//     },
+//   },
 // });
 
 // https://vitejs.dev/config/
