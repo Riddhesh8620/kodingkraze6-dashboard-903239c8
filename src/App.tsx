@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/use-auth";
 import { CartProvider } from "@/contexts/CartContext";
+import Landing from "./pages/Landing";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import TutorAuth from "./pages/TutorAuth";
@@ -44,7 +45,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   }
 
   if (!user) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/auth" replace />;
   }
 
   return <>{children}</>;
@@ -88,8 +89,16 @@ function TutorProtectedRoute({ children }: { children: React.ReactNode }) {
 
 const AppRoutes = () => (
   <Routes>
-    <Route path="/" element={<Auth />} />
+    {/* Public routes */}
+    <Route path="/" element={<Landing />} />
+    <Route path="/auth" element={<Auth />} />
     <Route path="/auth/tutor" element={<TutorAuth />} />
+    <Route path="/categories" element={<CategoriesListing />} />
+    <Route path="/categories/:categoryId" element={<CategoryCourses />} />
+    <Route path="/courses/:id" element={<CourseDetail />} />
+    <Route path="/interview" element={<InterviewReadyLanding />} />
+    
+    {/* Protected user routes */}
     <Route 
       path="/dashboard" 
       element={
@@ -98,16 +107,6 @@ const AppRoutes = () => (
         </ProtectedRoute>
       } 
     />
-    <Route 
-      path="/courses/:id" 
-      element={
-        <ProtectedRoute>
-          <CourseDetail />
-        </ProtectedRoute>
-      } 
-    />
-    <Route path="/categories" element={<CategoriesListing />} />
-    <Route path="/categories/:categoryId" element={<CategoryCourses />} />
     <Route 
       path="/sessions/book" 
       element={
