@@ -26,14 +26,14 @@ const CategorySkeleton = () => (
 
 const Categories = () => {
   // Now correctly destructuring from the useQuery hook
-  const { data: categories, isLoading } = useCategories();
+  // const { data: categories, isLoading } = useCategories();
 
   // Decide what to show: API data, or fallback if API fails/is empty
-  const displayCategories = (categories && categories.length > 0) ? categories : fallbackCategories;
+  const displayCategories = fallbackCategories;
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-      {isLoading ? (
+      {true ? (
         // Show skeletons while loading
         Array.from({ length: 6 }).map((_, index) => (
           <CategorySkeleton key={index} />

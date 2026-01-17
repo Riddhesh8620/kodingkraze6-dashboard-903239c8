@@ -32,7 +32,7 @@ const WelcomeHero = () => {
         <div className="inline-flex items-center gap-2 rounded-full border border-foreground/10 bg-background/80 backdrop-blur-sm px-4 py-2 text-sm font-medium mb-8 animate-fade-up">
           <Sparkles className="h-4 w-4 text-accent" />
           <span>No subscriptions.Pay as you Learn .</span>
-          <ArrowRight className="h-3 w-3 text-muted-foreground" />
+          {/* <ArrowRight className="h-3 w-3 text-muted-foreground" /> */}
         </div>
 
         {/* Headline */}
@@ -61,7 +61,7 @@ const WelcomeHero = () => {
         </div>
 
         {/* Stats row */}
-        <div className="flex flex-wrap gap-8 md:gap-12 mt-12 pt-8 border-t border-foreground/10 animate-fade-up" style={{ animationDelay: "0.4s" }}>
+        {/* <div className="flex flex-wrap gap-8 md:gap-12 mt-12 pt-8 border-t border-foreground/10 animate-fade-up" style={{ animationDelay: "0.4s" }}>
           {[
             { value: "50K+", label: "Students" },
             { value: "200+", label: "Courses" },
@@ -72,7 +72,7 @@ const WelcomeHero = () => {
               <div className="text-sm text-muted-foreground mt-1">{stat.label}</div>
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
     </section>
   );

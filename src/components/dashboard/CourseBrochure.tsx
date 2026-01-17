@@ -194,17 +194,17 @@ const CourseSkeleton = () => (
 );
 
 const CourseBrochure = () => {
-  const { data: courses, isLoading } = useCourses();
+  // const { data: courses, isLoading } = useCourses();
   
   // Use API data or fallback, and ensure we have categoryColor
-  const displayCourses = (courses || fallbackCourses).map(course => ({
+  const displayCourses = (fallbackCourses).map(course => ({
     ...course,
     categoryColor: categoryColors[course.category] || "hsl(217, 91%, 60%)",
   }));
 
   return (
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {isLoading ? (
+        {true ? (
           Array.from({ length: 6 }).map((_, index) => (
             <CourseSkeleton key={index} />
           ))

@@ -73,8 +73,8 @@ const Index = () => {
                 <Zap className="h-5 w-5 text-background" fill="currentColor" />
               </div>
               <div>
-                <span className="font-display font-bold">KodingKRaze6</span>
-                <span className="text-muted-foreground ml-2">© 2024</span>
+                <span className="font-display font-bold">KodingKraze6</span>
+                <span className="text-muted-foreground ml-2">© 2026</span>
               </div>
             </div>
             <div className="flex items-center gap-8 text-sm text-muted-foreground">
