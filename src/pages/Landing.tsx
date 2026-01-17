@@ -6,6 +6,7 @@ import CourseBrochure from "@/components/dashboard/CourseBrochure";
 import AuthPromptDialog from "@/components/AuthPromptDialog";
 import { ArrowRight, Zap, BookOpen, Users, Award, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import WelcomeHero from "@/components/dashboard/WelcomeHero";
 
 const Landing = () => {
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
@@ -20,6 +21,8 @@ const Landing = () => {
       <PublicHeader />
       
       <main className="container py-12 space-y-20">
+        {/* Welcome Hero Section */}
+        <WelcomeHero />
         {/* Hero Section */}
         <section className="relative py-12 md:py-20">
           <div className="absolute inset-0 pattern-grid opacity-30" />

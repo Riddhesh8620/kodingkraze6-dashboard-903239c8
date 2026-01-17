@@ -223,7 +223,7 @@ const CategoriesListing = () => {
           <div className="absolute inset-0 pattern-grid opacity-10" />
           <div className="absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl opacity-20 gradient-accent" />
           
-          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+          {/* <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="max-w-xl">
               <h2 className="text-2xl md:text-3xl font-bold font-display mb-4">
                 Can't find what you're looking for?
@@ -240,7 +240,7 @@ const CategoriesListing = () => {
               Book a Session
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

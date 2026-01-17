@@ -188,9 +188,9 @@ const Header = () => {
                 {/* Admin Links */}
                 {isAdmin && <AdminLinks />}
                 
-                <Button className="w-full mt-4" onClick={() => navigate('/sessions/book')}>
+                {/* <Button className="w-full mt-4" onClick={() => navigate('/sessions/book')}>
                   Book a Session
-                </Button>
+                </Button> */}
               </div>
             </SheetContent>
           </Sheet>

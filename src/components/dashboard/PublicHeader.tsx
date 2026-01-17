@@ -84,7 +84,7 @@ const PublicHeader = () => {
 
           {/* Auth Buttons */}
           <div className="hidden sm:flex items-center gap-2">
-            <Button variant="ghost" onClick={() => navigate("/")} className="gap-2">
+            <Button variant="ghost" onClick={() => navigate("/auth")} className="gap-2">
               <LogIn className="h-4 w-4" />
               Sign In
             </Button>

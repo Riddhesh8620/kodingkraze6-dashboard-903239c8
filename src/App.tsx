@@ -90,7 +90,7 @@ function TutorProtectedRoute({ children }: { children: React.ReactNode }) {
 const AppRoutes = () => (
   <Routes>
     {/* All public routes - entire site is browsable without auth */}
-    <Route path="/" element={<Index />} />
+    <Route path="/" element={<Landing />} />
     <Route path="/auth" element={<Auth />} />
     <Route path="/auth/tutor" element={<TutorAuth />} />
     <Route path="/dashboard" element={<Index />} />

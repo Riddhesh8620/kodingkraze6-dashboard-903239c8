@@ -672,7 +672,7 @@ const CourseDetail = () => {
               </div>
 
               {/* Book Session CTA */}
-              <div className="mt-6 pt-6 border-t border-border">
+              {/* <div className="mt-6 pt-6 border-t border-border">
                 <Button 
                   variant="outline" 
                   className="w-full"
@@ -681,7 +681,7 @@ const CourseDetail = () => {
                   <Award className="mr-2 h-4 w-4" />
                   Book 1:1 Session
                 </Button>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
